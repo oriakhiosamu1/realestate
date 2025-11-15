@@ -1,0 +1,15 @@
+/* This file must be imported in src/main.jsx (import './index.css';)
+  The @tailwind directives inject the preflight styles (reset) and all 
+  the utility classes based on your App.jsx usage.
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional: Apply a default font globally. 
+  We are using the 'Inter' font as specified in the component rules.
+*/
+body {
+  font-family: 'Inter', sans-serif;
+}
