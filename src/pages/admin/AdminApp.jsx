@@ -34,24 +34,56 @@ export default function AdminApp() {
   const [agents, setAgents] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [payments, setPayments] = useState([]);
+  // const [properties, setProperties] = useState([]);
   
   const [currentView, setCurrentView] = useState('dashboard');
-  
+  const [errors, setErrors] = useState({});
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    last_page: 1,
+    per_page: 0,
+    total: 0,
+  });
+
   const [modalType, setModalType] = useState(null); // 'create-house', 'edit-agent', etc.
   const [editingItem, setEditingItem] = useState(null);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
 
   // --- Data Loading ---
-  const fetchAgents = async () => {
-    axiosClient.get('agents')
-    .then(({data}) => {
+  // const fetchAgents = async () => {
+  //   axiosClient.get('agents')
+  //   .then(({data}) => {
+  //     console.log(data);
+  //     setAgents(data.data)
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   })
+  // };
+
+  const fetchAgents = async (page = 1) => {
+    try {
+      const { data } = await axiosClient.get(`agents?page=${page}`);
+      
+      // Update agents state
+      setAgents(data.data); // `data.data` contains the array of agents
       console.log(data);
-      setAgents(data.data.data)
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+      
+      // Update pagination info
+      setPagination({
+        current_page: data.current_page,
+        last_page: data.last_page,
+        per_page: data.per_page,
+        total: data.total,
+      });
+      
+    } catch (error) {
+      console.error("Failed to fetch agents:", error);
+      setErrors({ fetch: ["Failed to load agents"] });
+    }
   };
+
+
 
   const fetchBlogs = async () => {
     axiosClient.get('blogs')
@@ -75,13 +107,34 @@ export default function AdminApp() {
     })
   }
 
+  const fetchProperties = async () => {
+    axiosClient.get('houses')
+    .then(({data}) => {
+      console.log(data);
+      setHouses(data.data)
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
+  // Fetch data on mount and when refetchTrigger changes==========================================================================================================================
   useEffect(() => {
     fetchAgents();
     fetchBlogs();
     fetchPaymentHistory();
+    fetchProperties();
 
     setIsLoading(false);
   }, [refetchTrigger]);
+
+  // auto-clear errors after 5 seconds=========================================================================================================================================
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      const timer = setTimeout(() => setErrors({}), 5000);
+      return () => clearTimeout(timer); // cleanup if errors change
+    }
+  }, [errors]);
 
   // --- Data Saving Helpers (MOCK API calls for Laravel) ---
   const saveMap = {
@@ -229,7 +282,24 @@ export default function AdminApp() {
         setRefetchTrigger(prev => prev + 1);   // <=== tells useEffect to refetch
         handleCloseModal();
       })
-      .catch(console.log);
+      // .catch(console.log);
+
+      // Enhanced error handling
+      .catch((error) => {
+      console.error('Handle Save error:', error);
+
+      const responseErrors = error.response;
+      const msg = responseErrors?.data?.message || "Something went wrong";
+
+      if (responseErrors?.status === 401) {
+        setErrors({ general: [msg] });
+      } else {
+        setErrors({ email: [msg] });
+      }
+
+      handleCloseModal();
+      setIsLoading(false);
+    });
   };
 
   // --- Payment Handlers ---
@@ -300,7 +370,7 @@ export default function AdminApp() {
       case 'houses':
         return <PropertiesComponent houses={houses} onEdit={(item) => handleEdit('houses', item)} onDelete={(id) => handleDelete('houses', id)} onAdd={() => handleAdd('houses')} />;
       case 'agents':
-        return <AgentsComponent agents={agents} onEdit={(item) => handleEdit('agents', item)} onDelete={(id) => handleDelete('agents', id)} onAdd={() => handleAdd('agents')} />;
+        return <AgentsComponent onPageChange={(page) => fetchAgents(page)} pagination={pagination}  errors={errors} agents={agents} onEdit={(item) => handleEdit('agents', item)} onDelete={(id) => handleDelete('agents', id)} onAdd={() => handleAdd('agents')} />;
       case 'blogs':
         return <BlogsComponent blogs={blogs} onEdit={(item) => handleEdit('blogs', item)} onDelete={(id) => handleDelete('blogs', id)} onAdd={() => handleAdd('blogs')} />;
       case 'confirm-payments':

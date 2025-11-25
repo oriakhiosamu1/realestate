@@ -1,7 +1,9 @@
 // CompletedPaymentCard.jsx
 import React from 'react';
+const baseUrl = import.meta.env.VITE_API_BASE_URL.replace('/api', '');
 
 export default function CompletedPaymentCard({ payment }) {
+  console.log(baseUrl);
   return (
     <div key={payment.id} className="bg-gray-50 p-3 sm:p-4 rounded-lg shadow-md border border-gray-200">
       <div className="flex justify-between items-center mb-3 pb-3 border-b">
@@ -47,10 +49,13 @@ export default function CompletedPaymentCard({ payment }) {
               <i className="fas fa-image mr-2"></i>Payment Proof:
             </p>
             <img 
-              src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${payment.image}`} 
+              // src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${payment.image}`} 
+              // src={`${baseUrl}/${payment.image}`}
+              src={payment.image}
               alt="Payment proof" 
               className="w-full max-w-sm rounded-lg border border-gray-300 shadow-sm cursor-pointer hover:shadow-md transition"
-              onClick={() => window.open(`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${payment.image}`, '_blank')}
+              // onClick={() => window.open(`${baseUrl}/storage/${payment.image}`, "_blank")}
+              onClick={() => window.open(payment.image, "_blank")} 
             />
           </div>
         )}

@@ -22,7 +22,7 @@ export default function PropertiesComponent({ houses, onEdit, onDelete, onAdd })
           {houses.map(house => (
             <div key={house.id} className="bg-gray-50 p-3 sm:p-4 border border-gray-200 rounded-lg sm:rounded-xl shadow-md flex flex-col sm:flex-row transition hover:shadow-lg">
               <img 
-                src={house.imageUrl || DEFAULT_HOUSE_IMAGE} 
+                src={house.image_url || DEFAULT_HOUSE_IMAGE} 
                 alt={house.title} 
                 className="w-full h-32 sm:w-32 sm:h-32 object-cover rounded-lg mr-0 sm:mr-4 mb-3 sm:mb-0 flex-shrink-0 border"
                 onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_HOUSE_IMAGE; }}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, X } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
 // --- Shared Components ---
 
@@ -143,36 +144,40 @@ const BrandMattersSection = () => (
   </div>
 );
 
-const FindAnExpertSection = () => (
-  <div className="relative py-16 md:py-24 bg-gray-100 overflow-hidden">
-    <div className="absolute inset-0 bg-gray-700">
-        <img
-            src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80"
-            alt="Modern Office Interior"
-            className="w-full h-full object-cover opacity-30"
-        />
-    </div>
+const FindAnExpertSection = () => {
+  const navigate = useNavigate();
+  
+  return (
+    <div className="relative py-16 md:py-24 bg-gray-100 overflow-hidden">
+      <div className="absolute inset-0 bg-gray-700">
+          <img
+              src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80"
+              alt="Modern Office Interior"
+              className="w-full h-full object-cover opacity-30"
+          />
+      </div>
 
-    <div className="relative max-w-sm sm:max-w-md mx-auto p-8 md:p-10 bg-white/80 shadow-2xl rounded-lg text-center backdrop-blur-sm">
-      <h2 className="text-2xl md:text-3xl font-light text-gray-800 mb-4">Find an Expert in Your Market</h2>
-      <p className="text-xs sm:text-sm text-gray-600 mb-6 leading-relaxed">
-        Contact us to value your property and to learn more about the unparalleled 
-        luxury real estate services we offer.
-      </p>
-      
-      <div className="space-y-4">
-        <button className="w-full py-3 bg-amber-700 text-white font-medium rounded-lg shadow-md hover:bg-amber-800 transition duration-150 text-sm flex items-center justify-center">
-          Find Your Agent
-          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-        </button>
-        <button className="w-full py-3 bg-white text-amber-700 border border-amber-700 font-medium rounded-lg shadow-md hover:bg-gray-100 transition duration-150 text-sm flex items-center justify-center">
-          Contact Your Local Office
-          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-        </button>
+      <div className="relative max-w-sm sm:max-w-md mx-auto p-8 md:p-10 bg-white/80 shadow-2xl rounded-lg text-center backdrop-blur-sm">
+        <h2 className="text-2xl md:text-3xl font-light text-gray-800 mb-4">Find an Expert in Your Market</h2>
+        <p className="text-xs sm:text-sm text-gray-600 mb-6 leading-relaxed">
+          Contact us to value your property and to learn more about the unparalleled 
+          luxury real estate services we offer.
+        </p>
+        
+        <div className="space-y-4">
+          <button onClick={() => navigate("/agents")} className="w-full py-3 bg-amber-700 text-white font-medium rounded-lg shadow-md hover:bg-amber-800 transition duration-150 text-sm flex items-center justify-center">
+            Find Your Agent
+            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+          </button>
+          <button className="w-full py-3 bg-white text-amber-700 border border-amber-700 font-medium rounded-lg shadow-md hover:bg-gray-100 transition duration-150 text-sm flex items-center justify-center">
+            Contact Your Local Office
+            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-);
+  )
+};
 
 // --- Contact Modal Component ---
 

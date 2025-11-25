@@ -1,8 +1,9 @@
 // AgentsComponent.jsx
 import React from 'react';
 import { DEFAULT_AGENT_IMAGE } from '../shared/constants';
+import Errors from '../../../components/Errors';
 
-export default function AgentsComponent({ agents, onEdit, onDelete, onAdd }) {
+export default function AgentsComponent({ errors, pagination, onPageChange,  agents, onEdit, onDelete, onAdd }) {
   return (
     <div className="bg-white p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl shadow-xl border border-gray-100">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
@@ -15,6 +16,8 @@ export default function AgentsComponent({ agents, onEdit, onDelete, onAdd }) {
         </button>
       </div>
       
+      {Object.keys(errors).length > 0 && <Errors errors={errors} />}
+
       {agents.length === 0 ? (
         <p className="text-gray-500 py-8 text-center bg-gray-50 rounded-lg text-sm sm:text-base">No agents found.</p>
       ) : (
@@ -22,7 +25,12 @@ export default function AgentsComponent({ agents, onEdit, onDelete, onAdd }) {
           {agents.map(agent => (
             <div key={agent.id} className="p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl shadow-md text-center transition hover:shadow-lg">
               <img 
-                src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${agent.image}`|| DEFAULT_AGENT_IMAGE} 
+                // src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${agent.image}`|| DEFAULT_AGENT_IMAGE} 
+                src={
+                  agent.image 
+                    ? `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${agent.image}` 
+                    : DEFAULT_AGENT_IMAGE
+                  }
                 alt={agent.name} 
                 className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-full mx-auto mb-3 border-4 border-white ring-2 ring-gray-200 shadow-inner"
                 onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_AGENT_IMAGE; }}
@@ -47,10 +55,48 @@ export default function AgentsComponent({ agents, onEdit, onDelete, onAdd }) {
                   <i className="fas fa-trash-alt mr-1"></i> Delete
                 </button>
               </div>
+
             </div>
           ))}
         </div>
       )}
+
+      {/* PAGINATION BUTTONS */}
+      <div className="flex justify-center mt-6 space-x-3">
+        <button
+          onClick={() => onPageChange(pagination?.current_page - 1)}
+          disabled={pagination?.current_page <= 1}
+          className="
+            px-5 py-2
+            bg-blue-600 text-white font-semibold
+            rounded-lg shadow-md
+            hover:bg-blue-700 hover:shadow-lg
+            transition duration-200
+            disabled:opacity-50 disabled:cursor-not-allowed
+          "
+        >
+          Prev
+        </button>
+
+        <span className="text-sm font-medium text-gray-700">
+          Page <span className="font-bold text-blue-600">{pagination?.current_page}</span> of <span className="font-bold">{pagination?.last_page}</span>
+        </span>
+
+        <button
+          onClick={() => onPageChange(pagination?.current_page + 1)}
+          disabled={pagination?.current_page >= pagination?.last_page}
+          className="
+            px-5 py-2
+            bg-blue-600 text-white font-semibold
+            rounded-lg shadow-md
+            hover:bg-blue-700 hover:shadow-lg
+            transition duration-200
+            disabled:opacity-50 disabled:cursor-not-allowed
+          "
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }

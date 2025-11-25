@@ -1,8 +1,9 @@
 // BlogsComponent.jsx
 import React from 'react';
 import { DEFAULT_BLOG_IMAGE } from '../shared/constants';
+import Errors from '../../../components/Errors';
 
-export default function BlogsComponent({ blogs, onEdit, onDelete, onAdd }) {
+export default function BlogsComponent({  errors = {}, blogs, onEdit, onDelete, onAdd }) {
   return (
     <div className="bg-white p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl shadow-xl border border-gray-100">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
@@ -14,6 +15,10 @@ export default function BlogsComponent({ blogs, onEdit, onDelete, onAdd }) {
           <i className="fas fa-plus mr-1 sm:mr-2"></i> Add Post
         </button>
       </div>
+
+      {Object.keys(errors).length > 0 && <Errors errors={errors} />}
+      {/* {Object.keys(errors || {}).length > 0 && <Errors errors={errors} />} */}
+
       
       {blogs.length === 0 ? (
         <p className="text-gray-500 py-8 text-center bg-gray-50 rounded-lg text-sm sm:text-base">No blog posts found.</p>
