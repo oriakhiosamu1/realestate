@@ -49,18 +49,6 @@ export default function AdminApp() {
   const [editingItem, setEditingItem] = useState(null);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
 
-  // --- Data Loading ---
-  // const fetchAgents = async () => {
-  //   axiosClient.get('agents')
-  //   .then(({data}) => {
-  //     console.log(data);
-  //     setAgents(data.data)
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   })
-  // };
-
   const fetchAgents = async (page = 1) => {
     try {
       const { data } = await axiosClient.get(`agents?page=${page}`);
@@ -137,12 +125,12 @@ export default function AdminApp() {
   }, [errors]);
 
   // --- Data Saving Helpers (MOCK API calls for Laravel) ---
-  const saveMap = {
-    houses: async (data) => { await window.storage.set('admin-houses', JSON.stringify(data)); setHouses(data); },
-    agents: async (data) => { await window.storage.set('admin-agents', JSON.stringify(data)); setAgents(data); },
-    blogs: async (data) => { await window.storage.set('admin-blogs', JSON.stringify(data)); setBlogs(data); },
-    payments: async (data) => { await window.storage.set('wallet-payments', JSON.stringify(data), true); setPayments(data); },
-  };
+  // const saveMap = {
+  //   houses: async (data) => { await window.storage.set('admin-houses', JSON.stringify(data)); setHouses(data); },
+  //   agents: async (data) => { await window.storage.set('admin-agents', JSON.stringify(data)); setAgents(data); },
+  //   blogs: async (data) => { await window.storage.set('admin-blogs', JSON.stringify(data)); setBlogs(data); },
+  //   payments: async (data) => { await window.storage.set('wallet-payments', JSON.stringify(data), true); setPayments(data); },
+  // };
 
   // --- CRUD Core Logic ---
 
@@ -177,100 +165,8 @@ export default function AdminApp() {
   // SAVE FUNCTION ========================================================================================================================================================
   const singularMap = { agents: "agent", houses: "house", blogs: "blog" };
 
-  // const handleSave = async (type, item) => {
-  //   try {
-  //     let response;
 
-  //     if (item.id) {
-  //       // UPDATE
-  //       response = await axiosClient.put(`${type}/${item.id}`, item);
-  //       console.log(`✅ Updated ${type}:`, response.data);
-
-  //     } else {
-  //       // CREATE
-  //       response = await axiosClient.post(`${type}`, item);
-  //       console.log(`✅ Created new ${type}:`, response.data);
-  //     }
-
-  //     const key = singularMap[type];
-  //     const savedItem = response.data[key] || response.data;
-
-  //     const dataMap = { houses, agents, blogs };
-  //     const updatedList = item.id
-  //       ? dataMap[type].map((i) => (i.id === item.id ? savedItem : i))
-  //       : [...dataMap[type], savedItem];
-
-  //     await saveMap[type](updatedList);
-  //     handleCloseModal();
-
-  //   } catch (error) {
-  //     console.error(`❌ Error saving ${type}:`, error.response?.data || error.message);
-  //     alert(error.response?.data?.message || `Failed to save ${type}`);
-  //   }
-  // };
-
-  // const handleSave = async (type, item) => {
-  //   if (item.id) {
-  //     // UPDATE===============================================================================================
-  //     axiosClient.put(`${type}/${item.id}`, item)
-  //     .then(({data}) => {
-  //       console.log(data);
-  //       handleCloseModal();
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-
-  //   } else {
-  //     // CREATE===============================================================================================
-  //     axiosClient.post(`${type}`, item)
-  //     .then(({data}) => {
-  //       console.log(data);
-  //       handleCloseModal();
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  //   }
-  // };
-  // SAVE FUNCTION ENDS ====================================================================================================================================================
-
-
-
-  // Called by PropertiesComponent, AgentsComponent, etc.
-  // const handleDelete = async (type, id) => {
-  //   // Validate type
-  //   const validTypes = ['houses', 'agents', 'blogs'];
-  //   if (!validTypes.includes(type)) {
-  //     console.error(`Invalid type: "${type}"`);
-  //     return;
-  //   }
-
-  //   // Ask for user confirmation
-  //   if (!window.confirm(`Are you sure you want to delete this ${type.slice(0, -1)}?`)) return;
-
-  //   try {
-  //     // Optimistic UI update
-  //     const dataMap = { houses, agents, blogs };
-  //     const saveFnMap = saveMap; // e.g., { houses: setHouses, agents: setAgents, blogs: setBlogs }
-  //     const currentData = dataMap[type];
-  //     const filteredData = currentData.filter(item => item.id !== id);
-
-  //     // Update state immediately
-  //     saveFnMap[type](filteredData);
-
-  //     // Axios DELETE request
-  //     await axiosClient.delete(`${type}/${id}`);
-
-  //     console.log(`${type.slice(0, -1)} deleted successfully!`);
-  //   } catch (error) {
-  //     // Revert UI if API fails
-  //     console.error('Error deleting item:', error);
-  //     saveMap[type](dataMap[type]);
-  //     alert('Deletion failed. Please try again.');
-  //   }
-  // };
-
+  // HANDLES SAVE AND EDIT FUNCTION ========================================================================================================================================================
   const handleSave = async (type, item) => {
     const request = item.id
       ? axiosClient.put(`${type}/${item.id}`, item)
@@ -304,6 +200,8 @@ export default function AdminApp() {
 
   // --- Payment Handlers ---
   
+
+  // HANDLES DELETE FUNCTION ========================================================================================================================================================
   const handleDelete = async (type, id) => {
     const validTypes = ['houses', 'agents', 'blogs'];
     if (!validTypes.includes(type)) {
@@ -368,7 +266,7 @@ export default function AdminApp() {
       case 'dashboard':
         return <Dashboard houses={houses} agents={agents} blogs={blogs} payments={payments} setCurrentView={setCurrentView} />;
       case 'houses':
-        return <PropertiesComponent houses={houses} onEdit={(item) => handleEdit('houses', item)} onDelete={(id) => handleDelete('houses', id)} onAdd={() => handleAdd('houses')} />;
+        return <PropertiesComponent onPageChange={(page) => fetchProperties(page)} pagination={pagination}  errors={errors} houses={houses} onEdit={(item) => handleEdit('houses', item)} onDelete={(id) => handleDelete('houses', id)} onAdd={() => handleAdd('houses')} />;
       case 'agents':
         return <AgentsComponent onPageChange={(page) => fetchAgents(page)} pagination={pagination}  errors={errors} agents={agents} onEdit={(item) => handleEdit('agents', item)} onDelete={(id) => handleDelete('agents', id)} onAdd={() => handleAdd('agents')} />;
       case 'blogs':

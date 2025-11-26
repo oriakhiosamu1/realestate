@@ -29,16 +29,30 @@ export const EMPTY_AGENT = {
   image: '' 
 };
 
-export const EMPTY_BLOG = { 
-  title: '', 
-  excerpt: '', 
-  content: '', 
-  author: '', 
-  category: 'Buying Tips', 
+// export const EMPTY_BLOG = { 
+//   title: '', 
+//   excerpt: '', 
+//   content: '', 
+//   author: '', 
+//   category: 'Buying Tips', 
+//   image: DEFAULT_BLOG_IMAGE,
+//   location: 'General',
+//   readTime: '5 min read'
+// };
+
+export const EMPTY_BLOG = {
+  title: "",
   image: DEFAULT_BLOG_IMAGE,
-  location: 'General',
-  readTime: '5 min read'
+  image_url: '',
+  excerpt: "",
+  content: "",
+  conclusion: "",
+  author: "",
+  tags: [],
+  location: "",
+  reading_time: "",
 };
+
 
 export const BLOG_CATEGORIES = [
   'Buying Tips', 

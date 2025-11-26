@@ -88,6 +88,8 @@ export default function EditPropertyForm({ item, onSave, onCancel }) {
 
     const payload = {
       ...house,
+      id: house.id,
+
       // numeric fields
       bedrooms: house.bedrooms ? Number(house.bedrooms) : null,
       bathrooms: house.bathrooms ? Number(house.bathrooms) : null,
@@ -98,11 +100,12 @@ export default function EditPropertyForm({ item, onSave, onCancel }) {
       acres: house.acres || null,
     };
 
+    console.log("SUBMIT PAYLOAD:", payload); // debug
     onSave('houses', payload);
   };
 
   return (
-    <Modal title={`Edit Property: ${house.name_of_property}`} onClose={onCancel}>
+    <Modal title={`Edit Property: ${house.name}`} onClose={onCancel}>
       <form onSubmit={handleSubmit}>
         <div className="space-y-3 sm:space-y-5 mb-6 sm:mb-8">
           

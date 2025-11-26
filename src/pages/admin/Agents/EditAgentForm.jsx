@@ -56,6 +56,22 @@ export default function EditAgentForm({ item, onSave, onCancel }) {
             previewClass="w-20 h-20 rounded-full"
           />
 
+          {/* Direct Image URL from backend / CDN */}
+          <label className="block">
+            <span className="text-xs sm:text-sm text-gray-700 font-medium">
+              Image URL (CDN / backend)
+            </span>
+            <input
+              type="text"
+              name="imageUrl"
+              value={agent.imageUrl || ''}
+              onChange={handleChange}
+              placeholder="https://example.com/avatar.jpg"
+              className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2 sm:p-3"
+            />
+          </label>
+
+
           {fields.map(({ name, label, type, placeholder }) => (
             <label key={name} className="block">
               <span className="text-xs sm:text-sm text-gray-700 font-medium">{label}</span>

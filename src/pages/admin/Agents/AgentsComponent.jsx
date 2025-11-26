@@ -26,11 +26,12 @@ export default function AgentsComponent({ errors, pagination, onPageChange,  age
             <div key={agent.id} className="p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl shadow-md text-center transition hover:shadow-lg">
               <img 
                 // src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${agent.image}`|| DEFAULT_AGENT_IMAGE} 
-                src={
-                  agent.image 
-                    ? `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${agent.image}` 
-                    : DEFAULT_AGENT_IMAGE
-                  }
+                // src={
+                //   agent.image ? `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${agent.image}` : agent.imageUrl 
+                //       ? agent.imageUrl 
+                //       : DEFAULT_AGENT_IMAGE
+                //   }
+                src={agent.imageUrl || `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${agent.image}` || DEFAULT_AGENT_IMAGE}
                 alt={agent.name} 
                 className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-full mx-auto mb-3 border-4 border-white ring-2 ring-gray-200 shadow-inner"
                 onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_AGENT_IMAGE; }}

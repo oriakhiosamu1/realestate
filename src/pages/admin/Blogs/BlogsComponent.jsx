@@ -27,16 +27,19 @@ export default function BlogsComponent({  errors = {}, blogs, onEdit, onDelete, 
           {blogs.map(blog => (
             <div key={blog.id} className="bg-gray-50 border border-gray-200 rounded-lg sm:rounded-xl shadow-md overflow-hidden transition hover:shadow-lg">
               <img 
-                src={`${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${blog.image}` || DEFAULT_BLOG_IMAGE} 
+                // src={blog.image_url || `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${blog.image}` || DEFAULT_BLOG_IMAGE}
+                src={blog.image_url || blog.image || DEFAULT_BLOG_IMAGE}
                 alt={blog.title} 
                 className="w-full h-32 sm:h-40 object-cover"
                 onError={(e) => { e.target.onerror = null; e.target.src = DEFAULT_BLOG_IMAGE; }}
               />
               <div className="p-3 sm:p-4">
                 <div className="flex items-center justify-between mb-2">
+
                   <span className="px-2 py-0.5 bg-blue-600 text-white text-xs font-semibold rounded-full">
-                    {blog.tags}
+                    {Array.isArray(blog.tags) ? blog.tags.join(" | ") : blog.tags}
                   </span>
+
                   <span className="text-xs text-gray-500">{blog.reading_time}</span>
                 </div>
                 <p className="font-bold text-sm sm:text-base text-gray-900 mb-2 line-clamp-2">{blog.title}</p>

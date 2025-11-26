@@ -138,18 +138,26 @@ export default function EditBlogForm({ item, onSave, onCancel }) {
   const setField = (field, value) =>
     setBlog(prev => ({ ...prev, [field]: value }));
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   // Ensure tags is an array before saving
+  //   const finalBlog = {
+  //     ...blog,
+  //     tags: typeof blog.tags === 'string'
+  //       ? blog.tags.split(',').map(t => t.trim()).filter(Boolean)
+  //       : blog.tags,
+  //   };
+
+  //   onSave('blogs', finalBlog);
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Ensure tags is an array before saving
-    const finalBlog = {
-      ...blog,
-      tags: typeof blog.tags === 'string'
-        ? blog.tags.split(',').map(t => t.trim()).filter(Boolean)
-        : blog.tags,
-    };
+    console.log('Saving blog post:', blog);
 
-    onSave('blogs', finalBlog);
+    onSave('blogs', blog);
   };
 
   return (
@@ -173,6 +181,19 @@ export default function EditBlogForm({ item, onSave, onCancel }) {
               type="text"
               value={blog.title}
               onChange={(e) => setField('title', e.target.value)}
+              required
+              className="mt-1 w-full border border-gray-300 rounded-lg p-3 shadow-sm"
+            />
+          </label>
+
+          {/* IMAGE URL */}
+          <label className="block">
+            <span className="text-sm font-medium text-gray-700">Blog Image Url</span>
+            <input
+              type="text"
+              // value={blog.image_url}
+              value={blog.image_url || ""}
+              onChange={(e) => setField('image_url', e.target.value)}
               required
               className="mt-1 w-full border border-gray-300 rounded-lg p-3 shadow-sm"
             />
@@ -230,7 +251,7 @@ export default function EditBlogForm({ item, onSave, onCancel }) {
           </label>
 
           {/* Category */}
-          <label className="block">
+          {/* <label className="block">
             <span className="text-sm font-medium text-gray-700">Tags</span>
             <select
               value={blog.category}
@@ -242,6 +263,32 @@ export default function EditBlogForm({ item, onSave, onCancel }) {
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
+          </label> */}
+
+          <label className="block">
+            <span className="text-sm font-medium text-gray-700">Tags / Categories</span>
+  
+            <div className="mt-2 space-y-2">
+              {BLOG_CATEGORIES.map((cat) => (
+                <label key={cat} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={Array.isArray(blog.tags) && blog.tags.includes(cat)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setField('tags', [...(blog.tags || []), cat]);
+                      } else {
+                        setField(
+                          'tags',
+                          blog.tags.filter(t => t !== cat)
+                        );
+                      }
+                    }}
+                  />
+                  <span>{cat}</span>
+                </label>
+              ))}
+            </div>
           </label>
 
           {/* Location */}
