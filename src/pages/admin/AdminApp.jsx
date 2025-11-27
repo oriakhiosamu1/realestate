@@ -30,7 +30,7 @@ import EditOfficeForm from './Offices/EditOfficeForm';
 
 export default function AdminApp() {
   const [userId] = useState('admin-' + Math.random().toString(36).substring(7));
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   
   const [houses, setHouses] = useState([]);
   const [agents, setAgents] = useState([]);
@@ -52,6 +52,8 @@ export default function AdminApp() {
   const [modalType, setModalType] = useState(null); // 'create-house', 'edit-agent', etc.
   const [editingItem, setEditingItem] = useState(null);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(false); // Loading state for data creation and editing
 
   const fetchAgents = async (page = 1) => {
     try {
@@ -187,6 +189,9 @@ export default function AdminApp() {
 
   // HANDLES SAVE AND EDIT FUNCTION ========================================================================================================================================================
   const handleSave = async (type, item) => {
+
+    setIsLoading(true); // Start loading
+
     const request = item.id
       ? axiosClient.put(`${type}/${item.id}`, item)
       : axiosClient.post(`${type}`, item);
@@ -195,6 +200,7 @@ export default function AdminApp() {
       .then(({ data }) => {
         console.log(data);
         // setMessageBox('Action Executed Successfully!');
+        setIsLoading(false); // Stop loading
 
         setRefetchTrigger(prev => prev + 1);   // <=== tells useEffect to refetch
         handleCloseModal();
@@ -204,6 +210,7 @@ export default function AdminApp() {
       // Enhanced error handling
       .catch((error) => {
       console.error('Handle Save error:', error);
+      setIsLoading(false); // Stop loading
 
       const responseErrors = error.response;
       const msg = responseErrors?.data?.message || "Something went wrong";
@@ -311,23 +318,23 @@ export default function AdminApp() {
     // Use a clear switch statement to render the correct standalone form
     switch (modalType) {
       case 'create-house':
-        return <CreatePropertyForm onSave={handleSave} onCancel={handleCloseModal} />;
+        return <CreatePropertyForm isLoading={isLoading} onSave={handleSave} onCancel={handleCloseModal} />;
       case 'edit-house':
-        return <EditPropertyForm item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
+        return <EditPropertyForm isLoading={isLoading} item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
 
       case 'create-agent':
-        return <CreateAgentForm onSave={handleSave} onCancel={handleCloseModal} />;
+        return <CreateAgentForm isLoading={isLoading} onSave={handleSave} onCancel={handleCloseModal} />;
       case 'edit-agent':
-        return <EditAgentForm item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
+        return <EditAgentForm isLoading={isLoading} item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
 
       case 'create-blog':
-        return <CreateBlogForm onSave={handleSave} onCancel={handleCloseModal} />;
+        return <CreateBlogForm isLoading={isLoading} onSave={handleSave} onCancel={handleCloseModal} />;
       case 'edit-blog':
-        return <EditBlogForm item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
+        return <EditBlogForm isLoading={isLoading} item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
       case 'create-office':
-        return <CreateOfficeForm onSave={handleSave} onCancel={handleCloseModal} />;
+        return <CreateOfficeForm isLoading={isLoading} onSave={handleSave} onCancel={handleCloseModal} />;
       case 'edit-office':
-        return <EditOfficeForm item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
+        return <EditOfficeForm isLoading={isLoading} item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
       default:
         return null;
     }

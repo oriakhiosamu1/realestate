@@ -131,8 +131,9 @@ import React, { useState } from 'react';
 import Modal from '../shared/Modal';
 import ImageUploadPreview from '../shared/ImageUploadPreview';
 import { BLOG_CATEGORIES } from '../shared/constants';
+import { CircleLoader, BeatLoader, ClipLoader } from "react-spinners";
 
-export default function EditBlogForm({ item, onSave, onCancel }) {
+export default function EditBlogForm({ isLoading, item, onSave, onCancel }) {
   const [blog, setBlog] = useState(item);
 
   const setField = (field, value) =>
@@ -330,7 +331,7 @@ export default function EditBlogForm({ item, onSave, onCancel }) {
             type="submit"
             className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold shadow-lg"
           >
-            <i className="fas fa-save mr-2"></i> Save Changes
+            {isLoading ? (<ClipLoader size={20} color="#ffffff" />) : (<><i className="fas fa-save mr-2"></i>Save Changes</>)}
           </button>
         </div>
       </form>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { CircleLoader, BeatLoader, ClipLoader } from "react-spinners";
 
-export default function EditOfficeForm({ item, onSave, onCancel }) {
+export default function EditOfficeForm({ isLoading, item, onSave, onCancel }) {
   const [office, setOffice] = useState(item);
 
   const handleChange = (field, value) => {
@@ -119,7 +120,8 @@ export default function EditOfficeForm({ item, onSave, onCancel }) {
             onClick={handleSubmit}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
-            Save Changes
+            {/* Save Changes */}
+            {isLoading ? (<ClipLoader size={20} color="#ffffff" />) : (<><i className="fas fa-save mr-2"></i>Save Changes</>)}
           </button>
         </div>
       </div>

@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import Modal from '../shared/Modal';
 import ImageUploadPreview from '../shared/ImageUploadPreview';
 import axiosClient from '../../../axiosClient/axiosClient';
+import { CircleLoader, BeatLoader, ClipLoader } from "react-spinners";
 
-export default function EditAgentForm({ item, onSave, onCancel }) {
+export default function EditAgentForm({ isLoading, item, onSave, onCancel }) {
   const [agent, setAgent] = useState(item || {});
 
   // Fetch agent data when item.id changes
@@ -36,6 +37,7 @@ export default function EditAgentForm({ item, onSave, onCancel }) {
   // Form fields configuration
   const fields = [
     { name: 'name', label: 'Full Name', type: 'text', placeholder: 'e.g., Sophia Williams' },
+    { name: 'imageUrl', label: 'Agent Image Url', type: 'text', placeholder: 'e.g., https://example.com/agent.png' },
     { name: 'office', label: 'Office', type: 'text', placeholder: 'e.g., Head Office - Lagos' },
     { name: 'location', label: 'Location', type: 'text', placeholder: 'e.g., Lagos, Nigeria' },
     { name: 'phone', label: 'Phone', type: 'tel', placeholder: 'e.g., +234 812 345 6789' },
@@ -101,7 +103,8 @@ export default function EditAgentForm({ item, onSave, onCancel }) {
             type="submit"
             className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg sm:rounded-xl hover:bg-blue-700 transition duration-200 text-sm sm:text-base font-semibold shadow-lg"
           >
-            <i className="fas fa-save mr-2"></i> Save Changes
+            {/* <i className="fas fa-save mr-2"></i> Save Changes */}
+            {isLoading ? (<ClipLoader size={20} color="#ffffff" />) : (<><i className="fas fa-save mr-2"></i>Save Changes</>)}
           </button>
         </div>
       </form>

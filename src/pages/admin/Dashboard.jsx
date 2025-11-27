@@ -31,13 +31,22 @@ export default function Dashboard({ houses, offices, agents, blogs, payments, se
   const pendingCount = payments.filter(p => p.status === 'pending').length;
   const completedCount = payments.filter(p => p.status === 'completed').length;
   const {user} = useStateContext();
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem("hasSeenWelcome")) {
+      setShowWelcome(true);
+      localStorage.setItem("hasSeenWelcome", "true");
+    }
+  }, []);
+
 
   return (
     <div className="p-0">
       <h3 className="text-xl sm:text-2xl md:text-3xl font-serif text-gray-800 mb-4 sm:mb-6 font-bold">Dashboard Summary</h3>
 
-      <WelcomeMessage user={user} />
-      {/* {messageBox === '' && <MessageBox message={messageBox} />} */}
+      {/* <WelcomeMessage user={user} /> */}
+      {showWelcome && <WelcomeMessage user={user} />}
       
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         <InfoCard 

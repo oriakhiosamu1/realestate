@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import Modal from '../shared/Modal';
 import ImageUploadPreview from '../shared/ImageUploadPreview';
 import { EMPTY_AGENT } from '../shared/constants';
+import { CircleLoader, BeatLoader, ClipLoader } from "react-spinners";
 
-export default function CreateAgentForm({ onSave, onCancel }) {
+export default function CreateAgentForm({ isLoading, onSave, onCancel }) {
   const [agent, setAgent] = useState(EMPTY_AGENT);
 
   // --- Handle Field Updates ---
@@ -42,6 +43,7 @@ export default function CreateAgentForm({ onSave, onCancel }) {
         {/* Input Fields */}
         {[
           { name: 'name', label: 'Full Name', type: 'text', placeholder: 'e.g., Sophia Williams' },
+          { name: 'imageUrl', label: 'Agent Image Url', type: 'text', placeholder: 'e.g., https://example.com/agent.png' },
           { name: 'office', label: 'Office', type: 'text', placeholder: 'e.g., Head Office - Lagos' },
           { name: 'location', label: 'Location', type: 'text', placeholder: 'e.g., Lagos, Nigeria' },
           { name: 'phone', label: 'Phone', type: 'tel', placeholder: 'e.g., +234 812 345 6789' },
@@ -76,7 +78,8 @@ export default function CreateAgentForm({ onSave, onCancel }) {
             type="submit"
             className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 font-semibold"
           >
-            <i className="fas fa-user-plus mr-2"></i> Create Agent
+            {/* <i className="fas fa-user-plus mr-2"></i> Create Agent */}
+            {isLoading ? (<BeatLoader size={10} color="#ffffff" />) : (<><i className="fas fa-save mr-2"></i>Create Agent</>)}
           </button>
         </div>
       </form>

@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import Modal from '../shared/Modal';
 import ImageUploadPreview from '../shared/ImageUploadPreview';
 import { EMPTY_BLOG, BLOG_CATEGORIES } from '../shared/constants';
+import { CircleLoader, BeatLoader, ClipLoader } from "react-spinners";
 
-export default function CreateBlogForm({ onSave, onCancel }) {
+export default function CreateBlogForm({ isLoading, onSave, onCancel }) {
   const [blog, setBlog] = useState(EMPTY_BLOG);
 
   // Generic field setter
@@ -195,7 +196,8 @@ export default function CreateBlogForm({ onSave, onCancel }) {
             type="submit"
             className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold shadow-lg"
           >
-            <i className="fas fa-plus-circle mr-2"></i> Create Post
+            {/* <i className="fas fa-plus-circle mr-2"></i> Create Post */}
+            {isLoading ? (<BeatLoader size={10} color="#ffffff" />) : (<><i className="fas fa-save mr-2"></i>Create Post</>)}
           </button>
         </div>
       </form>

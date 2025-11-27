@@ -73,8 +73,9 @@ import React, { useState } from 'react';
 import Modal from '../shared/Modal';
 import ImageUploadPreview from '../shared/ImageUploadPreview';
 import { EMPTY_HOUSE } from '../shared/constants';
+import { CircleLoader, BeatLoader, ClipLoader } from "react-spinners";
 
-export default function CreatePropertyForm({ onSave, onCancel }) {
+export default function CreatePropertyForm({ isLoading, onSave, onCancel }) {
   const [house, setHouse] = useState(EMPTY_HOUSE);
 
   const setField = (field, value) => setHouse(prev => ({ ...prev, [field]: value }));
@@ -365,7 +366,8 @@ export default function CreatePropertyForm({ onSave, onCancel }) {
             type="submit" 
             className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg sm:rounded-xl hover:bg-blue-700 transition duration-200 text-sm sm:text-base font-semibold shadow-lg"
           >
-            <i className="fas fa-save mr-2"></i> Create Property
+            {/* <i className="fas fa-save mr-2"></i> Create Property */}
+            {isLoading ? (<BeatLoader size={10} color="#ffffff" />) : (<><i className="fas fa-save mr-2"></i>Create Property</>)}
           </button>
         </div>
       </form>

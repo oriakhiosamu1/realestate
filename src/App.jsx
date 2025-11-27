@@ -112,6 +112,7 @@ const Header = () => {
       setToken(null);
       setUser({});
       setIsLoading(false);
+      localStorage.removeItem("hasSeenWelcome");
       navigate('/login');
     })
     .catch((error) => {
