@@ -169,7 +169,7 @@ const FindAnExpertSection = () => {
             Find Your Agent
             <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
           </button>
-          <button className="w-full py-3 bg-white text-amber-700 border border-amber-700 font-medium rounded-lg shadow-md hover:bg-gray-100 transition duration-150 text-sm flex items-center justify-center">
+          <button  onClick={() => navigate("/offices")}  className="w-full py-3 bg-white text-amber-700 border border-amber-700 font-medium rounded-lg shadow-md hover:bg-gray-100 transition duration-150 text-sm flex items-center justify-center">
             Contact Your Local Office
             <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
           </button>

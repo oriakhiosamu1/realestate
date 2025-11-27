@@ -7,7 +7,8 @@ export default function AdminNav({ currentView, setCurrentView }) {
     { key: 'houses', title: 'Properties', icon: 'fas fa-home' },
     { key: 'agents', title: 'Agents', icon: 'fas fa-user-tie' },
     { key: 'blogs', title: 'Blog Posts', icon: 'fas fa-blog' },
-    { key: 'confirm-payments', title: 'Payments', icon: 'fas fa-receipt' },
+    { key: 'offices', title: 'offices', icon: 'fas fa-building' },
+    // { key: 'confirm-payments', title: 'Payments', icon: 'fas fa-receipt' },
     { key: 'payment-history', title: 'History', icon: 'fas fa-history' },
   ];
 

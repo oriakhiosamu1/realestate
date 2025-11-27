@@ -53,6 +53,17 @@ export const EMPTY_BLOG = {
   reading_time: "",
 };
 
+export const EMPTY_OFFICE = {
+  id: null,
+  name: "",
+  address: "",
+  phone: "",
+  email: "",
+  languages: [],
+  // lat: "",
+  // lng: ""
+};
+
 
 export const BLOG_CATEGORIES = [
   'Buying Tips', 

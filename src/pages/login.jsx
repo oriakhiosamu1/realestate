@@ -84,7 +84,7 @@ const App = () => {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
-  const {setUser, setToken} = useStateContext();
+  const {setUser, setToken, user} = useStateContext();
 
   const [login, setLogin] = useState({
     email: "",
@@ -161,7 +161,14 @@ const App = () => {
       setLoading(false);
       setUser(data.user);
       setToken(data.token);
-      navigate('/dashboard');
+
+      if (data.user.is_admin) {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+
+      // navigate('/dashboard');
     })
     .catch((error) => {
       console.error('Login error:', error);
@@ -266,7 +273,7 @@ const App = () => {
       </main>
 
       {/* --- Footer Email Subscription Section --- */}
-      <section className="border-t border-gray-200 mt-10 pt-10 pb-20 container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* <section className="border-t border-gray-200 mt-10 pt-10 pb-20 container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <h3 className="text-xl font-light text-gray-800 mb-6">
             Get luxury real estate updates in your inbox
@@ -286,7 +293,7 @@ const App = () => {
             This site is protected by reCAPTCHA and the Google <a href="#" className="underline">Privacy Policy</a> and <a href="#" className="underline">Terms of Service</a> apply.
           </p>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

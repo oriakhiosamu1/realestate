@@ -1,6 +1,6 @@
 // AdminApp.jsx (The Main Orchestrator)
 import React, { useState, useEffect } from 'react';
-import { FONT_FAMILY, EMPTY_HOUSE, EMPTY_AGENT, EMPTY_BLOG } from './shared/constants';
+import { FONT_FAMILY, EMPTY_HOUSE, EMPTY_AGENT, EMPTY_BLOG, EMPTY_OFFICE } from './shared/constants';
 import axiosClient from '../../axiosClient/axiosClient';
 
 // --- Shared Components ---
@@ -15,6 +15,7 @@ import AgentsComponent from './Agents/AgentsComponent';
 import BlogsComponent from './Blogs/BlogsComponent';
 import PaymentsComponent from './Payments/PaymentsComponent';
 import PaymentHistoryComponent from './Payments/PaymentHistoryComponent';
+import OfficesComponent from './Offices/OfficesComponent';
 
 // --- Form Components ---
 import CreatePropertyForm from './Properties/CreatePropertyForm';
@@ -23,7 +24,8 @@ import CreateAgentForm from './Agents/CreateAgentForm';
 import EditAgentForm from './Agents/EditAgentForm';
 import CreateBlogForm from './Blogs/CreateBlogForm';
 import EditBlogForm from './Blogs/EditBlogForm';
-import axios from 'axios';
+import CreateOfficeForm from './Offices/CreateOfficeForm';
+import EditOfficeForm from './Offices/EditOfficeForm';
 
 
 export default function AdminApp() {
@@ -34,10 +36,12 @@ export default function AdminApp() {
   const [agents, setAgents] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [offices, setOffices] = useState([]);
   // const [properties, setProperties] = useState([]);
   
   const [currentView, setCurrentView] = useState('dashboard');
   const [errors, setErrors] = useState({});
+  // const [messageBox, setMessageBox] = useState(''); //SETS MESSAGE
   const [pagination, setPagination] = useState({
     current_page: 1,
     last_page: 1,
@@ -84,6 +88,19 @@ export default function AdminApp() {
     })
   };
 
+  const fetchOffices = async () => {
+
+    axiosClient.get('/offices')
+    .then(({data}) => {
+      console.log(data);
+      setOffices(data.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+
+  }
+
   const fetchPaymentHistory = async () => {
     axiosClient.get('payments')
     .then(({data}) => {
@@ -112,6 +129,7 @@ export default function AdminApp() {
     fetchBlogs();
     fetchPaymentHistory();
     fetchProperties();
+    fetchOffices();
 
     setIsLoading(false);
   }, [refetchTrigger]);
@@ -144,7 +162,8 @@ export default function AdminApp() {
     const templates = {
       houses: EMPTY_HOUSE,
       agents: EMPTY_AGENT,
-      blogs: EMPTY_BLOG
+      blogs: EMPTY_BLOG,
+      offices: EMPTY_OFFICE
     };
     setEditingItem(templates[type]);
     setModalType(`create-${type.slice(0, -1)}`); // e.g., 'create-house'
@@ -175,6 +194,8 @@ export default function AdminApp() {
     request
       .then(({ data }) => {
         console.log(data);
+        // setMessageBox('Action Executed Successfully!');
+
         setRefetchTrigger(prev => prev + 1);   // <=== tells useEffect to refetch
         handleCloseModal();
       })
@@ -203,7 +224,7 @@ export default function AdminApp() {
 
   // HANDLES DELETE FUNCTION ========================================================================================================================================================
   const handleDelete = async (type, id) => {
-    const validTypes = ['houses', 'agents', 'blogs'];
+    const validTypes = ['houses', 'agents', 'blogs', 'offices'];
     if (!validTypes.includes(type)) {
       console.error(`Invalid type: "${type}"`);
       return;
@@ -264,15 +285,19 @@ export default function AdminApp() {
 
     switch (currentView) {
       case 'dashboard':
-        return <Dashboard houses={houses} agents={agents} blogs={blogs} payments={payments} setCurrentView={setCurrentView} />;
+        return <Dashboard offices={offices} houses={houses} agents={agents} blogs={blogs} payments={payments} setCurrentView={setCurrentView} />;
       case 'houses':
         return <PropertiesComponent onPageChange={(page) => fetchProperties(page)} pagination={pagination}  errors={errors} houses={houses} onEdit={(item) => handleEdit('houses', item)} onDelete={(id) => handleDelete('houses', id)} onAdd={() => handleAdd('houses')} />;
       case 'agents':
         return <AgentsComponent onPageChange={(page) => fetchAgents(page)} pagination={pagination}  errors={errors} agents={agents} onEdit={(item) => handleEdit('agents', item)} onDelete={(id) => handleDelete('agents', id)} onAdd={() => handleAdd('agents')} />;
       case 'blogs':
         return <BlogsComponent blogs={blogs} onEdit={(item) => handleEdit('blogs', item)} onDelete={(id) => handleDelete('blogs', id)} onAdd={() => handleAdd('blogs')} />;
-      case 'confirm-payments':
-        return <PaymentsComponent payments={payments} onConfirm={handleConfirmPayment} onReject={handleRejectPayment} onAddMock={handleAddMockPayment} />;
+      case 'offices' :
+        return <OfficesComponent offices={offices} onEdit={(item) => handleEdit('offices', item)} onDelete={(id) => handleDelete('offices', id)} onAdd={() => handleAdd('offices')} />;
+      // case 'confirm-payments':
+        // return <PaymentsComponent payments={payments} onConfirm={handleConfirmPayment} onReject={handleRejectPayment} onAddMock={handleAddMockPayment} />;
+        // case 'payments':
+        //   return <PaymentHistoryComponent payments={payments} onConfirm={handleConfirmPayment} onReject={handleRejectPayment} onAddMock={handleAddMockPayment} />;
       case 'payment-history':
         return <PaymentHistoryComponent payments={payments} />;
       default:
@@ -299,7 +324,10 @@ export default function AdminApp() {
         return <CreateBlogForm onSave={handleSave} onCancel={handleCloseModal} />;
       case 'edit-blog':
         return <EditBlogForm item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
-      
+      case 'create-office':
+        return <CreateOfficeForm onSave={handleSave} onCancel={handleCloseModal} />;
+      case 'edit-office':
+        return <EditOfficeForm item={editingItem} onSave={handleSave} onCancel={handleCloseModal} />;
       default:
         return null;
     }

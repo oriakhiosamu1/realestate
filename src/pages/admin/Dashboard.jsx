@@ -1,6 +1,9 @@
 // Dashboard.jsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PRIMARY_COLOR, SECONDARY_COLOR } from './shared/constants';
+import WelcomeMessage from '../../components/ShowMessage';
+import { useStateContext } from '../../context/ContextProvider';
+import MessageBox from '../../components/MessageBox';
 
 const InfoCard = ({ title, value, icon, color, action, actionText }) => (
     <div 
@@ -24,13 +27,17 @@ const InfoCard = ({ title, value, icon, color, action, actionText }) => (
     </div>
   );
 
-export default function Dashboard({ houses, agents, blogs, payments, setCurrentView }) {
+export default function Dashboard({ houses, offices, agents, blogs, payments, setCurrentView }) {
   const pendingCount = payments.filter(p => p.status === 'pending').length;
   const completedCount = payments.filter(p => p.status === 'completed').length;
+  const {user} = useStateContext();
 
   return (
     <div className="p-0">
       <h3 className="text-xl sm:text-2xl md:text-3xl font-serif text-gray-800 mb-4 sm:mb-6 font-bold">Dashboard Summary</h3>
+
+      <WelcomeMessage user={user} />
+      {/* {messageBox === '' && <MessageBox message={messageBox} />} */}
       
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         <InfoCard 
@@ -58,11 +65,29 @@ export default function Dashboard({ houses, agents, blogs, payments, setCurrentV
           actionText="Manage"
         />
         <InfoCard 
-          title="Pending" 
-          value={pendingCount} 
-          icon="fas fa-clock" 
+          title="Offices" 
+          value={offices.length} 
+          icon="fas fa-building" 
           color={SECONDARY_COLOR} 
+          action={() => setCurrentView('offices')}
+          actionText="Review"
+        />
+        {/* <InfoCard 
+          title="Payments" 
+          value={payments.length} 
+          icon="fas fa-clock" 
+          // color={SECONDARY_COLOR} 
+          color='#00FF00'
           action={() => setCurrentView('confirm-payments')}
+          actionText="Review"
+        /> */}
+        <InfoCard 
+          title="Payments" 
+          value={payments.length} 
+          icon="fas fa-clock" 
+          // color={SECONDARY_COLOR} 
+          color='#00FF00'
+          action={() => setCurrentView('payment-history')}
           actionText="Review"
         />
       </div>

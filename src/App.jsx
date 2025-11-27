@@ -16,6 +16,7 @@ import Login from './pages/login'
 import { useStateContext } from './context/ContextProvider';
 import axiosClient from './axiosClient/axiosClient';
 import AdminApp from './pages/admin/AdminApp';
+import OfficesPage from './pages/offices';
 
 
 // --- Global Constants ---
@@ -723,7 +724,7 @@ const RealEstateInvestmentSection = () => {
             </button>
 
             {/* Modal Content */}
-            <h3 className="text-base xs:text-lg sm:text-xl md:text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 to-yellow-600 mb-2 xs:mb-2.5 sm:mb-3 text-center pr-6 xs:pr-7">
+            <h3 style={{ color: '#7D4710' }} className="text-base xs:text-lg sm:text-xl md:text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 to-yellow-600 mb-2 xs:mb-2.5 sm:mb-3 text-center pr-6 xs:pr-7">
               Explore Exclusive Investment Opportunities
             </h3>
 
@@ -747,6 +748,7 @@ const RealEstateInvestmentSection = () => {
               </button>
               <button
                 onClick={() => navigate("/agents")}
+                style={{ backgroundColor: '#7D4710' }}
                 className="px-3 py-1.5 xs:px-4 xs:py-2 sm:px-5 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-semibold shadow-md hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 text-[10px] xs:text-xs sm:text-sm"
               >
                 Continue to Investment
@@ -954,6 +956,7 @@ const App = () => {
         {/* <Route path="/admin" element={<Admin />} /> */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/agents" element={<Agents />} />
+        <Route path="/offices" element={<OfficesPage />} />
         <Route path="/wallet" element={<CompanyWallet />} />
         <Route path="/login" element={<Login />} />
       </Routes>

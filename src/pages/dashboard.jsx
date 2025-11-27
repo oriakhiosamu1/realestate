@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useStateContext } from '../context/ContextProvider';
 import WelcomeMessage from '../components/ShowMessage';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import axiosClient from '../axiosClient/axiosClient';
 import axios from 'axios';
 import Errors from '../components/Errors';
@@ -511,9 +511,18 @@ export default function App() {
 
     // checks if user is admin and redirects him to admin page
     useEffect(() => {
-        if (user?.email === 'admin@gmail.com') {
-        navigate("/admin");
+        // if (user?.email === 'admin@gmail.com') {
+        //     navigate("/admin");
+        // }
+
+        // if (user?.is_admin) {
+        //     navigate("/admin");
+        // }
+
+        if (!user || !user.is_admin) {
+            navigate("/dashboard");
         }
+        
     }, [user, navigate]); 
 
     if (!localStorage.getItem('ACCESS_TOKEN')) {
