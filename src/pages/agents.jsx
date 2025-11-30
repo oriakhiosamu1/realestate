@@ -356,7 +356,7 @@ const AgentCard = ({ agent, index }) => {
     >
       <div className="w-1/3 min-w-[120px] max-w-[200px] flex-shrink-0">
         <img
-          src={imgSrc}
+          src={agent.imageUrl || imgSrc}
           alt={agent.name}
           className="w-full h-full aspect-[4/5] object-cover"
           onError={(e) => {
@@ -373,9 +373,9 @@ const AgentCard = ({ agent, index }) => {
         <div>
           <h3 className="text-xl font-semibold text-gray-900 mb-0.5">{agent.name}</h3>
           <p className="text-sm text-gray-500 mb-1">
-            License No. <span className="font-medium text-gray-700">{agent.license}</span>
+            <span className="font-medium text-gray-700">{agent.license}</span>
           </p>
-          <p className="text-sm text-gray-600 mb-2">{agent.affiliation}</p>
+          <p className="text-sm text-gray-600 mb-2">{agent.office}</p>
           <div className="flex items-center text-xs text-gray-500 mb-3">
             <MapPin size={12} className="mr-1 text-gray-400" />
             {agent.location}
