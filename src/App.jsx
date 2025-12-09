@@ -17,6 +17,9 @@ import { useStateContext } from './context/ContextProvider';
 import axiosClient from './axiosClient/axiosClient';
 import AdminApp from './pages/admin/AdminApp';
 import OfficesPage from './pages/offices';
+import ForgetPassword from './pages/ForgetPassword.jsx';
+import BuyDetails from '../../../../../../Downloads/Estate website (1)/Estate website/src/pages/BuyDetails.jsx';
+import RentPropertyDetail from '../../../../../../Downloads/Estate website (1)/Estate website/src/pages/RentPropertyDetail.jsx';
 
 
 // --- Global Constants ---
@@ -960,6 +963,12 @@ const App = () => {
         <Route path="/offices" element={<OfficesPage />} />
         <Route path="/wallet" element={<CompanyWallet />} />
         <Route path="/login" element={<Login />} />
+
+        <Route path="/forgot-password" element={<ForgetPassword />} />
+
+        <Route path="/rent/:id" element={<RentPropertyDetail />} />
+        <Route path="/buy/:id" element={<BuyDetails />} />
+
       </Routes>
       <LuxuryFooter />
     </div>

@@ -312,7 +312,7 @@ import React, { useEffect, useState } from 'react';
 import { Search, Map, User, ChevronDown, Menu, X, Eye, EyeOff } from 'lucide-react';
 import axiosClient from '../axiosClient/axiosClient';
 import Errors from '../components/Errors.jsx';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useStateContext } from '../context/ContextProvider';
 import { CircleLoader, BeatLoader, ClipLoader } from "react-spinners";
 
@@ -559,6 +559,10 @@ const App = () => {
                   </div>
 
                   {Object.keys(errors).length > 0 && <Errors errors={errors} />}
+
+                  <p className="text-center text-sm text-gray-600 mt-6">
+                    Forget Password? <Link className='text-amber-700 hover:text-amber-800 font-semibold' to = '/forgot-password'>Don't worry, just click!</Link>
+                  </p>
                   
                   <button
                     onClick={handleLogin}
