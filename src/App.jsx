@@ -20,6 +20,8 @@ import OfficesPage from './pages/offices';
 import ForgetPassword from './pages/ForgetPassword.jsx';
 import BuyDetails from '../../../../../../Downloads/Estate website (1)/Estate website/src/pages/BuyDetails.jsx';
 import RentPropertyDetail from '../../../../../../Downloads/Estate website (1)/Estate website/src/pages/RentPropertyDetail.jsx';
+import PropertyListingPage from './pages/BuyDetails.jsx';
+import LuxuryVillaPage from './pages/RentPropertyDetail.jsx';
 
 
 // --- Global Constants ---
@@ -966,8 +968,8 @@ const App = () => {
 
         <Route path="/forgot-password" element={<ForgetPassword />} />
 
-        <Route path="/rent/:id" element={<RentPropertyDetail />} />
-        <Route path="/buy/:id" element={<BuyDetails />} />
+        <Route path="/rent/:id" element={<LuxuryVillaPage />} />
+        <Route path="/buy/:id" element={<PropertyListingPage />} />
 
       </Routes>
       <LuxuryFooter />
