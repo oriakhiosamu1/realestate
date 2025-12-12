@@ -1199,6 +1199,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Search, Heart, Star } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axiosClient from '../axiosClient/axiosClient';
+import SavePropertyButton from '../components/SavePropertyButton';
 
 const GOLD_COLOR = '#A38D66';
 const FILTER_BUTTON_CLASSES = 'px-4 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 hover:bg-gray-50 transition';
@@ -1255,14 +1256,19 @@ const PropertyCard = ({ property }) => {
             Featured Listing
           </div>
         )}
+
         <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition duration-300">
+          <SavePropertyButton property={property} />
+        </div>
+        
+        {/* <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition duration-300">
           <button 
             className="bg-white p-2 rounded-full shadow-md text-gray-700 hover:text-red-500 transition"
             onClick={(e) => e.stopPropagation()}
           >
             <Heart size={18} />
           </button>
-        </div>
+        </div> */}
       </div>
 
       <div className="p-4 border-t border-gray-100 flex-grow">

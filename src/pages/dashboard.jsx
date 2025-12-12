@@ -95,24 +95,24 @@ const Footer = () => (
 const PropertyCard = ({ item, isSaved }) => (
     <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl hover:scale-[1.01] cursor-pointer">
         <img 
-            src={item.imageUrl} 
-            alt={item.title} 
+            src={item.image_url} 
+            alt={item.name} 
             className="w-full h-40 sm:h-48 object-cover" 
             onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x200/cccccc/333333?text=Image'; }}
         />
         <div className="p-3 sm:p-4 lg:p-5">
             <div className="flex justify-between items-start mb-2">
-                <h4 className="text-lg sm:text-xl font-bold text-[#C3903E]">{item.price}</h4>
+                <h4 className="text-lg sm:text-xl font-bold text-[#C3903E]">${Number(item?.price).toLocaleString()}</h4>
                 {isSaved && (
                     <i className="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer text-base sm:text-lg transition-colors p-1 sm:p-2"></i>
                 )}
             </div>
-            <h5 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 line-clamp-2">{item.title}</h5>
+            <h5 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 line-clamp-2">{item.name}</h5>
             <p className="text-xs sm:text-sm text-gray-500 line-clamp-1">{item.location}</p>
             <div className="flex text-xs sm:text-sm text-gray-600 mt-2 sm:mt-3 space-x-3 sm:space-x-4 border-t pt-2 sm:pt-3">
-                <span><i className="fas fa-bed mr-1"></i> {item.beds || '-'}</span>
-                <span><i className="fas fa-bath mr-1"></i> {item.baths || '-'}</span>
-                <span className="hidden xs:inline"><i className="fas fa-ruler-combined mr-1"></i> {item.sqft || '-'}</span>
+                <span><i className="fas fa-bed mr-1"></i> {item.bedrooms || '-'}</span>
+                <span><i className="fas fa-bath mr-1"></i> {item.bathrooms || '-'}</span>
+                <span className="hidden xs:inline"><i className="fas fa-ruler-combined mr-1"></i> {item.feets || '-'}</span>
             </div>
         </div>
     </div>
@@ -480,12 +480,29 @@ const DashboardNav = ({ currentView, setCurrentView }) => {
 
 const AppContent = ({ currentView }) => {
     const data = MOCK_DATA[currentView] || [];
+    const [savedProperties, setSavedProperties] = useState(data);
+
+    function fetchSavedProperties() {
+        axiosClient.get('/saved-properties')
+        .then(({ data }) => {
+            setSavedProperties(data);
+            console.log('Fetched saved properties:', data);
+        })
+        .catch((error) => {
+            console.error('Error fetching saved properties:', error);
+        });
+    }
+
+    useEffect(() => {
+        fetchSavedProperties();
+    }, [])
     
     switch (currentView) {
         case 'profile':
             return <ProfileView />;
         case 'saved-properties':
-            return <PropertyListView data={data} title="Your Saved Properties" isSaved={true} />;
+            // return <PropertyListView data={data} title="Your Saved Properties" isSaved={true} />;
+            return <PropertyListView data={savedProperties} title="Your Saved Properties" isSaved={true} />;
         case 'saved-searches':
             return <SavedSearchesView data={data} />;
         case 'house-rent':

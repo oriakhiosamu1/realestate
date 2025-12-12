@@ -13,7 +13,7 @@ import Dashboard from './pages/dashboard';
 import Agents from "./pages/agents";
 import CompanyWallet from "./pages/CompanyWallet";
 import Login from './pages/login'
-import { useStateContext } from './context/ContextProvider';
+import { useStateContext } from './context/ContextProvider.jsx';
 import axiosClient from './axiosClient/axiosClient';
 import AdminApp from './pages/admin/AdminApp';
 import OfficesPage from './pages/offices';
@@ -22,6 +22,7 @@ import BuyDetails from '../../../../../../Downloads/Estate website (1)/Estate we
 import RentPropertyDetail from '../../../../../../Downloads/Estate website (1)/Estate website/src/pages/RentPropertyDetail.jsx';
 import PropertyListingPage from './pages/BuyDetails.jsx';
 import LuxuryVillaPage from './pages/RentPropertyDetail.jsx';
+import Navbar from './components/NavBar.jsx';
 
 
 // --- Global Constants ---
@@ -34,6 +35,13 @@ const NAV_ITEMS = [
   { name: 'Agents & Offices', path: '/agents' },
   { name: 'Login', path: '/login' },
 ];
+
+const AUTH_NAV_ITEMS = [
+  { name: 'Buy', path: '/buy' },
+  { name: 'Rent', path: '/rent' },
+  { name: 'Dashboard', path: '/dashboard' },
+];
+
 
 const NAV_ITEMS_AUTH = [
   { name: 'Buy', path: '/buy' },
@@ -158,6 +166,16 @@ const Header = () => {
               {item.name}
             </Link>
           ))}
+
+          {/* {itemsToRender.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              className={`pb-1 transition duration-200 text-gray-600 hover:text-gray-900 whitespace-nowrap`}
+            >
+              {item.name}
+            </Link>
+          ))} */}
           <button
             onClick={() => console.log('Contact Us')}
             className={GOLD_BUTTON_CLASSES.replace('rounded-lg', 'rounded')} 
@@ -165,6 +183,8 @@ const Header = () => {
             Contact Us
           </button>
         </nav>
+
+        {/* <Navbar /> */}
 
         {/* Mobile Menu Button */}
         <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-2 lg:hidden">
@@ -200,6 +220,16 @@ const Header = () => {
               {item.name}
             </Link>
           ))}
+
+          {/* {itemsToRender.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              className={`pb-1 transition duration-200 text-gray-600 hover:text-gray-900 whitespace-nowrap`}
+            >
+              {item.name}
+            </Link>
+          ))} */}
         </nav>
       </div>
     </header>
