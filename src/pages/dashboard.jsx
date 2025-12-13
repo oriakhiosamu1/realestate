@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useStateContext } from '../context/ContextProvider';
 import WelcomeMessage from '../components/ShowMessage';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import axiosClient from '../axiosClient/axiosClient';
 import axios from 'axios';
 import Errors from '../components/Errors';
@@ -394,7 +394,34 @@ const PropertyListView = ({ data, title, isSaved }) => {
     );
 };
 
-const SavedSearchesView = ({ data }) => {
+const SavedSearchesView = ({ data, setSavedSearches }) => {
+
+    const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('en-US', {
+        month: 'short',  // Jan, Feb, ...
+        day: 'numeric',  // 1, 2, 3...
+        year: 'numeric'  // 2025
+    });
+    };
+
+    const handleDelete = (id) => {
+        if (!window.confirm("Are you sure you want to delete this saved search?")) {
+        return;
+        }
+
+        axiosClient
+        .delete(`/save-search/${id}`)
+        .then(() => {
+            // Remove deleted search from local state
+            setSavedSearches((prev) => prev.filter((s) => s.id !== id));
+        })
+        .catch((error) => {
+            console.error("Delete failed:", error);
+            alert("Failed to delete saved search");
+        });
+    };
+
     if (data.length === 0) {
         return <NoResults type="saved searches" />;
     }
@@ -406,14 +433,14 @@ const SavedSearchesView = ({ data }) => {
                 {data.map(s => (
                     <div key={s.id} className="bg-white p-3 sm:p-4 lg:p-5 border border-gray-200 rounded-lg sm:rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-md hover:shadow-lg transition duration-200">
                         <div className="flex-grow min-w-0 mb-3 sm:mb-0">
-                            <p className="font-semibold text-sm sm:text-base text-gray-900 break-words">{s.criteria}</p>
-                            <p className="text-xs sm:text-sm text-gray-500 mt-1">Last saved: {s.date}</p>
+                            <p className="font-semibold text-sm sm:text-base text-gray-900 break-words">{s.search}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 mt-1">Last saved: {formatDate(s.created_at)}</p>
                         </div>
                         <div className="flex space-x-2 flex-shrink-0 w-full sm:w-auto">
-                            <button className="text-[#C3903E] hover:text-[#AF8238] text-xs sm:text-sm font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition duration-200 flex-1 sm:flex-none">
-                                <i className="fas fa-edit mr-1"></i> Edit
-                            </button>
-                            <button className="text-red-500 hover:text-red-700 text-xs sm:text-sm font-medium px-3 py-2 rounded-lg hover:bg-red-50 transition duration-200 flex-1 sm:flex-none">
+                            <Link to = {`/rent/${s.property_id}`}  className="text-[#C3903E] hover:text-[#AF8238] text-xs sm:text-sm font-medium px-3 py-2 rounded-lg hover:bg-gray-100 transition duration-200 flex-1 sm:flex-none">
+                                <i className="fas fa-edit mr-1"></i> View
+                            </Link>
+                            <button onClick={()=>handleDelete(s.id)} className="text-red-500 hover:text-red-700 text-xs sm:text-sm font-medium px-3 py-2 rounded-lg hover:bg-red-50 transition duration-200 flex-1 sm:flex-none">
                                 <i className="fas fa-trash-alt mr-1"></i> Delete
                             </button>
                         </div>
@@ -481,6 +508,7 @@ const DashboardNav = ({ currentView, setCurrentView }) => {
 const AppContent = ({ currentView }) => {
     const data = MOCK_DATA[currentView] || [];
     const [savedProperties, setSavedProperties] = useState(data);
+    const [savedSearches, setSavedSearches] = useState(MOCK_DATA['saved-searches'] || []);
 
     function fetchSavedProperties() {
         axiosClient.get('/saved-properties')
@@ -493,8 +521,20 @@ const AppContent = ({ currentView }) => {
         });
     }
 
+    function fetchSavedSearches() {
+        axiosClient.get('/save-search')
+        .then(({ data }) => {
+            setSavedSearches(data);
+            console.log('Fetched saved searches:', data);
+        })
+        .catch((error) => {
+            console.error('Error fetching saved searches:', error);
+        });
+    }
+
     useEffect(() => {
         fetchSavedProperties();
+        fetchSavedSearches();
     }, [])
     
     switch (currentView) {
@@ -504,7 +544,8 @@ const AppContent = ({ currentView }) => {
             // return <PropertyListView data={data} title="Your Saved Properties" isSaved={true} />;
             return <PropertyListView data={savedProperties} title="Your Saved Properties" isSaved={true} />;
         case 'saved-searches':
-            return <SavedSearchesView data={data} />;
+            // return <SavedSearchesView data={data} />;
+            return <SavedSearchesView data={savedSearches} setSavedSearches={setSavedSearches} />;
         case 'house-rent':
             return <PropertyListView data={data} title="Your Rental History" isSaved={false} />;
         case 'apartments-bought':

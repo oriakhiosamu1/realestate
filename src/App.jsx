@@ -23,6 +23,7 @@ import RentPropertyDetail from '../../../../../../Downloads/Estate website (1)/E
 import PropertyListingPage from './pages/BuyDetails.jsx';
 import LuxuryVillaPage from './pages/RentPropertyDetail.jsx';
 import Navbar from './components/NavBar.jsx';
+import SearchBar from './components/SearchBar.jsx';
 
 
 // --- Global Constants ---
@@ -291,7 +292,10 @@ const HeroSection = () => {
         </h2>
 
         {/* Search Bar */}
-        <div className="bg-white rounded-full shadow-2xl p-1 xs:p-1.5 sm:p-2 max-w-[280px] xs:max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto flex items-center border border-gray-200">
+
+        <SearchBar />
+        
+        {/* <div className="bg-white rounded-full shadow-2xl p-1 xs:p-1.5 sm:p-2 max-w-[280px] xs:max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto flex items-center border border-gray-200">
           <input
             type="text"
             placeholder="Search Location or Agent"
@@ -300,7 +304,8 @@ const HeroSection = () => {
           <button className="p-1 xs:p-1.5 rounded-full text-gray-700 hover:text-yellow-800 transition flex-shrink-0" aria-label="Search">
             <Search size={16} className="xs:w-[18px] xs:h-[18px] sm:w-5 sm:h-5" />
           </button>
-        </div>
+        </div> */}
+
       </div>
 
       {/* Slider Navigation Dots */}
