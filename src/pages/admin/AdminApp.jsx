@@ -103,6 +103,17 @@ export default function AdminApp() {
 
   }
 
+  // const fetchPaymentHistory = async () => {
+  //   axiosClient.get('payments')
+  //   .then(({data}) => {
+  //     console.log(data);
+  //     setPayments(data.data)
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   })
+  // }
+
   const fetchPaymentHistory = async () => {
     axiosClient.get('payments')
     .then(({data}) => {

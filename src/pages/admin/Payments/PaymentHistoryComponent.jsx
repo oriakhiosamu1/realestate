@@ -3,7 +3,7 @@ import React from 'react';
 import CompletedPaymentCard from './CompletedPaymentCard';
 
 export default function PaymentHistoryComponent({ payments }) {
-  const completedPayments = payments.filter(p => p.status === 'paid').sort((a, b) => new Date(b.date) - new Date(a.date));
+ const completedPayments = payments.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
     <div className="bg-white p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl shadow-xl border border-gray-100">

@@ -28,8 +28,8 @@ const InfoCard = ({ title, value, icon, color, action, actionText }) => (
   );
 
 export default function Dashboard({ houses, offices, agents, blogs, payments, setCurrentView }) {
-  const pendingCount = payments.filter(p => p.status === 'pending').length;
-  const completedCount = payments.filter(p => p.status === 'completed').length;
+  const pendingCount = payments.filter(p => p.payment_status === 'pending').length;
+  const completedCount = payments.filter(p => p.payment_status === 'completed').length;
   const {user} = useStateContext();
   const [showWelcome, setShowWelcome] = useState(false);
 
