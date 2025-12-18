@@ -246,6 +246,12 @@ const ProfileView = () => {
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
 
+    const [showPasswords, setShowPasswords] = useState({
+        current: false,
+        new: false,
+        confirm: false
+    });
+
     const [id, setId] = useState(''); // Replace with actual user ID retrieval logic
 
     // useEffect(() => {
@@ -445,17 +451,32 @@ const ProfileView = () => {
 
                         <label className="block">
                             <span className="text-sm sm:text-base text-gray-700 font-medium">Current Password</span>
-                            <input name='current_password' value={password.current_password} onChange={handlePasswordChange} type="password" placeholder="Current Password" className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2.5 sm:p-3 text-sm sm:text-base focus:ring-primary focus:border-primary" />
+                            <div className="relative mt-1">
+                                <input name='current_password' value={password.current_password} onChange={handlePasswordChange} type={showPasswords.current ? 'text' : 'password'} placeholder="Current Password" className="block w-full border border-gray-300 rounded-lg shadow-sm p-2.5 sm:p-3 pr-10 text-sm sm:text-base focus:ring-primary focus:border-primary" />
+                                <button type="button" onClick={() => setShowPasswords(prev => ({ ...prev, current: !prev.current }))} className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    <i className={`fas ${showPasswords.current ? 'fa-eye-slash' : 'fa-eye'} text-gray-400`}></i>
+                                </button>
+                            </div>
                         </label>
 
                         <label className="block">
                             <span className="text-sm sm:text-base text-gray-700 font-medium">New Password</span>
-                            <input name='password' value={password.password} onChange={handlePasswordChange} type="password" placeholder="New Password" className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2.5 sm:p-3 text-sm sm:text-base focus:ring-primary focus:border-primary" />
+                            <div className="relative mt-1">
+                                <input name='password' value={password.password} onChange={handlePasswordChange} type={showPasswords.new ? 'text' : 'password'} placeholder="New Password" className="block w-full border border-gray-300 rounded-lg shadow-sm p-2.5 sm:p-3 pr-10 text-sm sm:text-base focus:ring-primary focus:border-primary" />
+                                <button type="button" onClick={() => setShowPasswords(prev => ({ ...prev, new: !prev.new }))} className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    <i className={`fas ${showPasswords.new ? 'fa-eye-slash' : 'fa-eye'} text-gray-400`}></i>
+                                </button>
+                            </div>
                         </label>
 
                         <label className="block">
                             <span className="text-sm sm:text-base text-gray-700 font-medium">Confirm New Password</span>
-                            <input name='password_confirmation' value={password.password_confirmation} onChange={handlePasswordChange} type="password" placeholder="Confirm New Password" className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2.5 sm:p-3 text-sm sm:text-base focus:ring-primary focus:border-primary" />
+                            <div className="relative mt-1">
+                                <input name='password_confirmation' value={password.password_confirmation} onChange={handlePasswordChange} type={showPasswords.confirm ? 'text' : 'password'} placeholder="Confirm New Password" className="block w-full border border-gray-300 rounded-lg shadow-sm p-2.5 sm:p-3 pr-10 text-sm sm:text-base focus:ring-primary focus:border-primary" />
+                                <button type="button" onClick={() => setShowPasswords(prev => ({ ...prev, confirm: !prev.confirm }))} className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    <i className={`fas ${showPasswords.confirm ? 'fa-eye-slash' : 'fa-eye'} text-gray-400`}></i>
+                                </button>
+                            </div>
                         </label>
 
                         <button onClick={handlePasswordSubmission} className="mt-6 sm:mt-8 bg-[#C3903E] hover:bg-[#AF8238] text-white px-6 py-2.5 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition duration-200 shadow-md w-full md:w-auto">

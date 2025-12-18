@@ -85,6 +85,29 @@ const PropertyListingPage = () => {
     });
   }, [id]);
 
+  const handleShare = async () => {
+    const shareData = {
+      title: propertyData?.title || 'Property Listing',
+      text: `Check out this property: ${propertyData?.title} at ${propertyData?.location}`,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Error sharing:', err);
+      }
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(shareData.url).then(() => {
+        alert('Link copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -168,7 +191,7 @@ const PropertyListingPage = () => {
                 <button className="p-2 border rounded-lg hover:bg-gray-50">
                   <Heart className="w-5 h-5" />
                 </button>
-                <button className="p-2 border rounded-lg hover:bg-gray-50">
+                <button onClick={handleShare} className="p-2 border rounded-lg hover:bg-gray-50">
                   <Share2 className="w-5 h-5" />
                 </button>
               </div>
@@ -391,7 +414,7 @@ const PropertyListingPage = () => {
 
     </div>
   );
-};
+}
 
 export default PropertyListingPage;
 
