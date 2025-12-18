@@ -24,6 +24,7 @@ import PropertyListingPage from './pages/BuyDetails.jsx';
 import LuxuryVillaPage from './pages/RentPropertyDetail.jsx';
 import Navbar from './components/NavBar.jsx';
 import SearchBar from './components/SearchBar.jsx';
+import ContactUsForm from './components/ContactUsForm.jsx';
 
 
 // --- Global Constants ---
@@ -117,6 +118,7 @@ const Header = () => {
   const {token, setToken, setUser} = useStateContext();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  // const navigate = useNavigate();
 
   const handleLogout = () => {
     setIsLoading(true);
@@ -178,7 +180,7 @@ const Header = () => {
             </Link>
           ))} */}
           <button
-            onClick={() => console.log('Contact Us')}
+            onClick={() => navigate('/contact')}
             className={GOLD_BUTTON_CLASSES.replace('rounded-lg', 'rounded')} 
           >
             Contact Us
@@ -190,19 +192,21 @@ const Header = () => {
         {/* Mobile Menu Button */}
         <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-2 lg:hidden">
           <button
-            onClick={() => console.log('Contact Us Mobile')}
+            onClick={() => navigate('/contact')}
             className={`py-1 px-2 xs:py-1.5 xs:px-2.5 sm:py-2 sm:px-4 bg-yellow-800 text-white rounded text-[9px] xs:text-[10px] sm:text-xs whitespace-nowrap`}
           >
             Contact
           </button>
           <button 
             className="text-gray-700 p-0.5"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={() => navigate('/contact')}
             aria-label="Toggle Mobile Menu"
           >
             {isMobileMenuOpen ? <X size={18} className="xs:w-5 xs:h-5" /> : <Menu size={18} className="xs:w-5 xs:h-5" />}
           </button>
         </div>
+
+        {/* <ContactUsForm isOpen={isContactOpen} onClose={() => setIsContactOpen(false)}/> */}
       </div>
       
       {/* Mobile Menu Dropdown */}
@@ -801,35 +805,57 @@ const RealEstateInvestmentSection = () => {
     </div>
   );
 };
+// --- Section 6: Subscription Banner ---
 
-// --- FOOTER COMPONENTS ---
 const SubscriptionBanner = () => {
-    return (
-        <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 md:px-8 pt-6 xs:pt-8 sm:pt-10 md:pt-12 lg:pt-16 pb-5 xs:pb-6 sm:pb-8 md:pb-10 lg:pb-12 text-center">
-            <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif text-gray-900 mb-3 xs:mb-4 sm:mb-5 md:mb-6 font-light px-2 xs:px-3">
-                Get luxury real estate updates in your inbox
-            </h2>
-            <div className="flex flex-col xs:flex-row max-w-[280px] xs:max-w-xs sm:max-w-sm md:max-w-lg mx-auto overflow-hidden border border-gray-300 rounded-lg">
-                <input
-                    type="email"
-                    placeholder="Email Address*"
-                    className="flex-grow p-2 xs:p-2.5 sm:p-3 text-xs xs:text-sm sm:text-base text-gray-900 focus:outline-none placeholder-gray-500 border-none w-full"
-                    aria-label="Email Address for Subscription"
-                />
-                <button
-                    className="bg-yellow-800 text-white font-semibold text-xs xs:text-sm sm:text-base py-2 xs:py-2.5 sm:py-3 px-4 xs:px-5 sm:px-6 hover:bg-yellow-900 transition duration-300 flex-shrink-0"
-                    onClick={() => console.log('Subscribed!')}
-                >
-                    Subscribe
-                </button>
-            </div>
-            <p className="text-[8px] xs:text-[9px] sm:text-[10px] text-gray-500 mt-2 xs:mt-2.5 sm:mt-3 text-left px-2 xs:px-0 max-w-[280px] xs:max-w-xs sm:max-w-sm md:max-w-lg mx-auto">
-                This site is protected by reCAPTCHA and the Google{' '}
-                <a href="#" className="underline hover:text-gray-700">Privacy Notice</a> and{' '}
-                <a href="#" className="underline hover:text-gray-700">Terms of Service</a> apply.
-            </p>
-        </div>
-    );
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const subscribe = async () => {
+    if (!email) return;
+
+    setLoading(true);
+
+    axiosClient.post("/subscribe", { email })
+      .then(({data}) => {
+        setEmail("");
+        alert("You’ve been subscribed!");
+        console.log(data);
+      })
+      .catch((error) => {
+        // alert("Subscription failed. Try again.");
+        alert(error.response?.data?.message || "An error occurred.");
+        console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 pt-12 pb-10 text-center">
+      <h2 className="text-2xl md:text-4xl font-serif mb-6">
+        Get luxury real estate updates in your inbox
+      </h2>
+
+      <div className="flex max-w-md mx-auto border rounded-lg overflow-hidden">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email Address*"
+          className="flex-grow p-3 text-sm outline-none"
+        />
+        <button
+          onClick={subscribe}
+          disabled={loading}
+          className="bg-yellow-800 text-white px-6 text-sm font-semibold"
+        >
+          {loading ? "..." : "Subscribe"}
+        </button>
+      </div>
+    </div>
+  );
 };
 
 const DarkFooter = () => (
@@ -1005,6 +1031,7 @@ const App = () => {
 
         <Route path="/rent/:id" element={<LuxuryVillaPage />} />
         <Route path="/buy/:id" element={<PropertyListingPage />} />
+        <Route path="/contact" element={<ContactUsForm />} />
 
       </Routes>
       <LuxuryFooter />

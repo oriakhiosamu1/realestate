@@ -97,7 +97,8 @@ export default function CompletedPaymentCard({ payment }) {
     const newType = e.target.value;
     setPropertyType(newType);
 
-    axiosClient.put(`${baseUrl}/payments/${payment.id}/update-property-type`, {
+    // axiosClient.put(`${baseUrl}/payments/${payment.id}/update-property-type`, {
+    axiosClient.put(`/payments/${payment.id}/update-property-type`, {
       property_type: newType ,
     })
     .then(({ data }) => {

@@ -92,31 +92,125 @@ const Footer = () => (
     </footer>
 );
 
+// const PropertyCard = ({ item, isSaved }) => (
+//     <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl hover:scale-[1.01] cursor-pointer">
+//         <img 
+//             src={item.image_url} 
+//             alt={item.name} 
+//             className="w-full h-40 sm:h-48 object-cover" 
+//             onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x200/cccccc/333333?text=Image'; }}
+//         />
+//         <div className="p-3 sm:p-4 lg:p-5">
+//             <div className="flex justify-between items-start mb-2">
+//                 <h4 className="text-lg sm:text-xl font-bold text-[#C3903E]">${Number(item?.price).toLocaleString()}</h4>
+//                 {isSaved && (
+//                     <i className="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer text-base sm:text-lg transition-colors p-1 sm:p-2"></i>
+//                 )}
+//             </div>
+//             <h5 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 line-clamp-2">{item.name}</h5>
+//             <p className="text-xs sm:text-sm text-gray-500 line-clamp-1">{item.location}</p>
+//             <div className="flex text-xs sm:text-sm text-gray-600 mt-2 sm:mt-3 space-x-3 sm:space-x-4 border-t pt-2 sm:pt-3">
+//                 <span><i className="fas fa-bed mr-1"></i> {item.bedrooms || '-'}</span>
+//                 <span><i className="fas fa-bath mr-1"></i> {item.bathrooms || '-'}</span>
+//                 <span className="hidden xs:inline"><i className="fas fa-ruler-combined mr-1"></i> {item.feets || '-'}</span>
+//             </div>
+//         </div>
+//     </div>
+// );
+
 const PropertyCard = ({ item, isSaved }) => (
-    <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl hover:scale-[1.01] cursor-pointer">
-        <img 
-            src={item.image_url} 
-            alt={item.name} 
-            className="w-full h-40 sm:h-48 object-cover" 
-            onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/300x200/cccccc/333333?text=Image'; }}
+  <>
+    {/* OWNERSHIP TYPE EXISTS (rent or buy) */}
+    {item?.ownership_type && (
+      <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl hover:scale-[1.01] cursor-pointer">
+        <img
+          src={item.image_url}
+          alt={item.property_name}
+          className="w-full h-40 sm:h-48 object-cover"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src =
+              "https://placehold.co/300x200/cccccc/333333?text=Image";
+          }}
         />
+
         <div className="p-3 sm:p-4 lg:p-5">
-            <div className="flex justify-between items-start mb-2">
-                <h4 className="text-lg sm:text-xl font-bold text-[#C3903E]">${Number(item?.price).toLocaleString()}</h4>
-                {isSaved && (
-                    <i className="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer text-base sm:text-lg transition-colors p-1 sm:p-2"></i>
-                )}
-            </div>
-            <h5 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 line-clamp-2">{item.name}</h5>
-            <p className="text-xs sm:text-sm text-gray-500 line-clamp-1">{item.location}</p>
-            <div className="flex text-xs sm:text-sm text-gray-600 mt-2 sm:mt-3 space-x-3 sm:space-x-4 border-t pt-2 sm:pt-3">
-                <span><i className="fas fa-bed mr-1"></i> {item.bedrooms || '-'}</span>
-                <span><i className="fas fa-bath mr-1"></i> {item.bathrooms || '-'}</span>
-                <span className="hidden xs:inline"><i className="fas fa-ruler-combined mr-1"></i> {item.feets || '-'}</span>
-            </div>
+          <div className="flex justify-between items-start mb-2">
+            <h4 className="text-lg sm:text-xl font-bold text-[#C3903E]">
+              {item.property_name}
+            </h4>
+
+            {isSaved && (
+              <i className="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer text-base sm:text-lg transition-colors p-1 sm:p-2"></i>
+            )}
+          </div>
+
+          <h5 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
+            {item.location}
+          </h5>
+
+          <p className="text-xs sm:text-sm text-gray-500 line-clamp-1">
+            Payment Status: {item.status}
+          </p>
+
+          {/* <div className="flex text-xs sm:text-sm text-gray-600 mt-2 sm:mt-3 space-x-3 sm:space-x-4 border-t pt-2 sm:pt-3">
+            <span><i className="fas fa-bed mr-1"></i> {item.bedrooms || "-"}</span>
+            <span><i className="fas fa-bath mr-1"></i> {item.bathrooms || "-"}</span>
+            <span className="hidden xs:inline">
+              <i className="fas fa-ruler-combined mr-1"></i> {item.feets || "-"}
+            </span>
+          </div> */}
         </div>
-    </div>
+      </div>
+    )}
+
+    {/* OWNERSHIP TYPE MISSING */}
+    {!item?.ownership_type && (
+      <div className="bg-white border border-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl hover:scale-[1.01] cursor-pointer">
+        <img
+          src={item.image_url}
+          alt={item.name}
+          className="w-full h-40 sm:h-48 object-cover"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src =
+              "https://placehold.co/300x200/cccccc/333333?text=Image";
+          }}
+        />
+
+        <div className="p-3 sm:p-4 lg:p-5">
+          <div className="flex justify-between items-start mb-2">
+            <h4 className="text-lg sm:text-xl font-bold text-[#C3903E]">
+              ${Number(item?.price).toLocaleString()}
+            </h4>
+
+            {isSaved && (
+              <i className="far fa-heart text-gray-400 hover:text-red-500 cursor-pointer text-base sm:text-lg transition-colors p-1 sm:p-2"></i>
+            )}
+          </div>
+
+          <h5 className="text-base sm:text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
+            {item.name}
+          </h5>
+
+          <p className="text-xs sm:text-sm text-gray-500 line-clamp-1">
+            {item.location}
+          </p>
+
+          <div className="flex text-xs sm:text-sm text-gray-600 mt-2 sm:mt-3 space-x-3 sm:space-x-4 border-t pt-2 sm:pt-3">
+            <span><i className="fas fa-bed mr-1"></i> {item.bedrooms || "-"}</span>
+            <span><i className="fas fa-bath mr-1"></i> {item.bathrooms || "-"}</span>
+            <span className="hidden xs:inline">
+              <i className="fas fa-ruler-combined mr-1"></i> {item.feets || "-"}
+            </span>
+          </div>
+        </div>
+      </div>
+    )}
+  </>
 );
+
+
 
 const NoResults = ({ type }) => (
     <div className="text-center py-10 sm:py-16 lg:py-20 bg-gray-50 rounded-lg sm:rounded-xl border border-gray-200 shadow-inner">
@@ -394,6 +488,7 @@ const PropertyListView = ({ data, title, isSaved }) => {
     );
 };
 
+
 const SavedSearchesView = ({ data, setSavedSearches }) => {
 
     const formatDate = (isoString) => {
@@ -451,6 +546,7 @@ const SavedSearchesView = ({ data, setSavedSearches }) => {
     );
 };
 
+
 const SoldHousesView = ({ data }) => {
     if (data.length === 0) {
         return <NoResults type="sales records" />;
@@ -463,17 +559,19 @@ const SoldHousesView = ({ data }) => {
                 {data.map(s => (
                     <div key={s.id} className="bg-white p-3 sm:p-4 lg:p-5 border border-gray-200 rounded-lg sm:rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-md hover:shadow-lg transition duration-200">
                         <div className="mb-2 sm:mb-0">
-                            <p className="font-bold text-gray-900 text-base sm:text-lg">{s.title}</p>
+                            <p className="font-bold text-gray-900 text-base sm:text-lg">{s.property_name}</p>
                             <p className="text-xs sm:text-sm text-gray-500">Location: {s.location}</p>
-                            <p className="text-lg sm:text-xl font-semibold text-[#C3903E] mt-2">Sold for: {s.price}</p>
+                            {/* <p className="text-lg sm:text-xl font-semibold text-[#C3903E] mt-2">Payment status: {s.status}</p> */}
+                            <p className="text-lg sm:text-sm font-semibold text-[#C3903E] mt-2">Payment status: {s.status}</p>
                         </div>
-                        <p className="text-xs sm:text-sm text-gray-600 flex-shrink-0 text-left sm:text-right">Sold on: {s.date}</p>
+                        <p className="text-xs sm:text-sm text-gray-600 flex-shrink-0 text-left sm:text-right">Sold on: {s.created_at}</p>
                     </div>
                 ))}
             </div>
         </>
     );
 };
+
 
 const DashboardNav = ({ currentView, setCurrentView }) => {
     const navItems = [
@@ -510,6 +608,10 @@ const AppContent = ({ currentView }) => {
     const [savedProperties, setSavedProperties] = useState(data);
     const [savedSearches, setSavedSearches] = useState(MOCK_DATA['saved-searches'] || []);
 
+    const [userSoldProperties, setUserSoldProperties] = useState([]);
+    const [userBoughtProperties, setUserBoughtProperties] = useState([]);
+    const [userRentedProperties, setUserRentedProperties] = useState([]);
+
     function fetchSavedProperties() {
         axiosClient.get('/saved-properties')
         .then(({ data }) => {
@@ -532,9 +634,45 @@ const AppContent = ({ currentView }) => {
         });
     }
 
+    function fetchUserSoldProperty() {
+        axiosClient.get('/user/properties/sell')
+        .then(({ data }) => {
+            setUserSoldProperties(data.data);
+            console.log('Fetched user sold property:', data);
+        })
+        .catch((error) => {
+            console.error('Error fetching user sold property:', error);
+        });
+    }
+
+    function fetchUserBoughtProperty() {
+        axiosClient.get('/user/properties/buy')
+        .then(({ data }) => {
+            setUserBoughtProperties(data.data);
+            console.log('Fetched user bought property:', data);
+        })
+        .catch((error) => {
+            console.error('Error fetching user bought property:', error);
+        });
+    }
+
+    function fetchUserRentedProperty() {
+        axiosClient.get('/user/properties/rent')
+        .then(({ data }) => {
+            setUserRentedProperties(data.data);
+            console.log('Fetched user rented property:', data);
+        })
+        .catch((error) => {
+            console.error('Error fetching user rented property:', error);
+        });
+    }
+
     useEffect(() => {
         fetchSavedProperties();
         fetchSavedSearches();
+        fetchUserSoldProperty();
+        fetchUserBoughtProperty();
+        fetchUserRentedProperty();
     }, [])
     
     switch (currentView) {
@@ -547,11 +685,11 @@ const AppContent = ({ currentView }) => {
             // return <SavedSearchesView data={data} />;
             return <SavedSearchesView data={savedSearches} setSavedSearches={setSavedSearches} />;
         case 'house-rent':
-            return <PropertyListView data={data} title="Your Rental History" isSaved={false} />;
+            return <PropertyListView data={userRentedProperties} title="Your Rental History" isSaved={false} />;
         case 'apartments-bought':
-            return <PropertyListView data={data} title="Your Apartment Purchase History" isSaved={false} />;
+            return <PropertyListView data={userBoughtProperties} title="Your Apartment Purchase History" isSaved={false} />;
         case 'house-sold':
-            return <SoldHousesView data={data} />;
+            return <SoldHousesView data={userSoldProperties} />;
         default:
             return (
                 <div className="text-center py-8 sm:py-10 bg-gray-50 rounded-lg sm:rounded-xl">

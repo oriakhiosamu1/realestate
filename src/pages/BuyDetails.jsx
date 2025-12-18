@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Heart, Share2, MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight } from 'lucide-react';
 import axiosClient from '../axiosClient/axiosClient';
+import ContactForm from '../components/ContactForm';
+import axios from 'axios';
+import RelatedStories from '../components/RelatedStories';
 
 const PropertyListingPage = () => {
   const {id} = useParams();
@@ -51,7 +54,17 @@ const PropertyListingPage = () => {
     e.preventDefault();
     
     console.log('Form submitted:', formData);
-    alert('Thank you for your interest! We will contact you shortly.');
+
+    axiosClient.post('/user/request-property-information', formData)
+    .then(({data}) => {
+      console.log('Form submission response:', data);
+      alert('Thank you for your interest! We will contact you shortly.');
+    })
+    .catch((error) => {
+      console.error('Error submitting form:', error);
+      alert('An error occurred while submitting the form. Please try again later.');
+    });
+    
   };
 
   const features = propertyData.features 
@@ -288,41 +301,7 @@ const PropertyListingPage = () => {
             </div>
 
             {/* Related Stories */}
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold mb-6">Related Stories</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  {
-                    title: "One Home and No Longer: 6 Open-Plan Living Spaces That Redefine Comfort",
-                    category: "HOME TOURS",
-                    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=400&h=300&fit=crop"
-                  },
-                  {
-                    title: "Splash in Style: 4 Private Indoor Pools",
-                    category: "HOME TOURS",
-                    image: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=400&h=300&fit=crop"
-                  },
-                  {
-                    title: "Property Insights: What Does $15 Million Buy Around the World?",
-                    category: "HOME TOURS",
-                    image: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=400&h=300&fit=crop"
-                  }
-                ].map((story, idx) => (
-                  <div key={idx} className="group cursor-pointer">
-                    <div className="aspect-[4/3] overflow-hidden rounded-lg mb-3">
-                      <img 
-                        src={story.image} 
-                        alt={story.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <p className="text-xs text-gray-500 mb-2">{story.category}</p>
-                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 group-hover:text-gray-600">{story.title}</h3>
-                    <button className="text-xs sm:text-sm underline mt-2">Read More</button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <RelatedStories />
           </div>
 
           {/* Sidebar */}
@@ -355,103 +334,7 @@ const PropertyListingPage = () => {
               </div>
 
               {/* Contact Form */}
-              <div className="bg-gray-50 border rounded-lg p-4 sm:p-6">
-                <h3 className="font-bold text-base sm:text-lg mb-4">REQUEST INFORMATION</h3>
-                <div className="space-y-4">
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address*"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  />
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Phone with Country Code"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-3 sm:px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  />
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows="4"
-                    className="w-full px-3 sm:px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  />
-
-                  <div>
-                    <h4 className="font-bold text-sm sm:text-base mb-3">SCHEDULE A PROPERTY TOUR</h4>
-                    <div className="space-y-2">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="tourType"
-                          value="in-person"
-                          checked={formData.tourType === 'in-person'}
-                          onChange={handleInputChange}
-                          className="w-4 h-4"
-                        />
-                        <span className="text-xs sm:text-sm">In Person or On Site Tour</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="tourType"
-                          value="virtual"
-                          checked={formData.tourType === 'virtual'}
-                          onChange={handleInputChange}
-                          className="w-4 h-4"
-                        />
-                        <span className="text-xs sm:text-sm">Virtual Online Tour</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-bold text-sm sm:text-base mb-3">SIGN UP FOR THE NEWSLETTER</h4>
-                    <label className="flex items-start gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        name="newsletter"
-                        checked={formData.newsletter}
-                        onChange={handleInputChange}
-                        className="w-4 h-4 mt-1"
-                      />
-                      <span className="text-xs sm:text-sm">Sign Up for Newsletter</span>
-                    </label>
-                  </div>
-
-                  <button
-                    onClick={handleSubmit}
-                    className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-lg transition-colors text-sm sm:text-base"
-                  >
-                    Submit
-                  </button>
-
-                  <p className="text-xs text-gray-600 leading-relaxed">
-                    By clicking 'Submit' I agree to the Privacy Policy and Terms of Service, and consent for Christie's International Real Estate, its franchisees, affiliates and/or agents to call, text or email me about my inquiry using contact information I provided including via automated telephone dialing system and/or artificial or prerecorded voice, and such consent is not a condition of any potential purchase. Standard data and message rates may apply. You may unsubscribe at any time.
-                  </p>
-                </div>
-              </div>
+              <ContactForm formData={formData} handleInputChange={handleInputChange} handleSubmit={handleSubmit} />
             </div>
           </div>
         </div>
