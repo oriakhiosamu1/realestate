@@ -114,25 +114,30 @@ export default function CompletedPaymentCard({ payment }) {
   return (
     <div className="bg-gray-50 p-3 sm:p-4 rounded-lg shadow-md border border-gray-200">
       {/* Header: Email, Amount, Payment Status */}
-      <div className="flex justify-between items-center mb-3 pb-3 border-b">
-        <div className="flex-grow">
-          <p className="text-sm sm:text-base font-bold text-gray-900">{payment.email}</p>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 pb-3 border-b gap-2 sm:gap-0">
+        <div className="flex-grow min-w-0">
+          <p className="text-sm sm:text-base font-bold text-gray-900 truncate">{payment.email}</p>
           <p className="text-base sm:text-lg font-extrabold text-green-600 mt-1">
             ${parseFloat(payment.amount_sent).toFixed(2)}
           </p>
         </div>
 
         {/* Payment Status Dropdown */}
-        <select
-          value={status}
-          onChange={handleStatusChange}
-          className={`px-2 py-0.5 text-xs font-bold rounded-full
-            ${status === 'confirmed' ? 'bg-green-100 text-green-800' : status === 'failed' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}
-        >
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="failed">Failed</option>
-        </select>
+        <div className="flex-shrink-0 ml-2 sm:ml-3">
+          <select
+            value={status}
+            onChange={handleStatusChange}
+            className={`px-3 py-2 sm:px-2 sm:py-0.5 text-sm sm:text-xs font-bold rounded-full border-2 border-transparent focus:border-current focus:outline-none transition-all duration-200 min-w-[120px] sm:min-w-[100px]
+              ${status === 'confirmed' ? 'bg-green-100 text-green-800 hover:bg-green-200' : 
+                status === 'failed' ? 'bg-red-100 text-red-800 hover:bg-red-200' : 
+                'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'} 
+              active:scale-95 touch-manipulation`}
+          >
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
       </div>
 
       {/* Payment Details */}
@@ -199,7 +204,7 @@ export default function CompletedPaymentCard({ payment }) {
           <select
             value={propertyType}
             onChange={handlePropertyTypeChange}
-            className="px-2 py-0.5 text-xs sm:text-sm font-bold rounded border border-gray-300"
+            className="px-3 py-2 sm:px-2 sm:py-0.5 text-sm sm:text-xs font-bold rounded border-2 border-gray-300 focus:border-blue-500 focus:outline-none transition-all duration-200 min-w-[100px] sm:min-w-[80px] bg-white hover:bg-gray-50 active:scale-95 touch-manipulation"
           >
             <option value="rent">Rent</option>
             <option value="buy">Buy</option>

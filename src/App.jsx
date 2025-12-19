@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { 
   Search, MapPin, User, Menu, Heart, 
-  X, ArrowRight, Instagram, Facebook, Linkedin 
+  X, ArrowRight, Instagram, Facebook, Linkedin, Trash 
 } from 'lucide-react';
 import { Routes, Route, useNavigate, Link } from "react-router-dom";
 import Buy from './pages/buy';
@@ -41,6 +41,7 @@ const NAV_ITEMS = [
 const AUTH_NAV_ITEMS = [
   { name: 'Buy', path: '/buy' },
   { name: 'Rent', path: '/rent' },
+  // { name: 'Sell', path: '/sell' },
   { name: 'Dashboard', path: '/dashboard' },
 ];
 
@@ -65,52 +66,59 @@ const FOOTER_NAV_LINKS = [
   'About Us', 'Affiliate Login', 'Corporate Directory', 'News', 'Legal', 'Contact Us', 'Site Map'
 ];
 
-// --- Mock Property Data ---
-const MOCK_PROPERTIES = [
- { id: 1, price: '19,248,715', location: 'Apartment in Jardin Exotique, Monaco', imageUrl: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop' },
-  { id: 2, price: '4,300,000', location: 'Multi Unit in Manhattan, NY', imageUrl: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop' },
-  { id: 3, price: 'Price upon request', location: 'Estate in Saarland, Germany', imageUrl: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop' },
-  { id: 4, price: '1,463,000', location: 'Condo in Miami, FL', imageUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=600&fit=crop' },
-  { id: 5, price: '5,100,000', location: 'Villa in Tuscany, Italy', imageUrl: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop' },
-  { id: 6, price: '995,000', location: 'Historic Home, London, UK', imageUrl: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&h=600&fit=crop' },
-  { id: 7, price: '2,800,000', location: 'Chalet in Aspen, CO', imageUrl: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=800&h=600&fit=crop' },
-  { id: 8, price: '7,500,000', location: 'Penthouse, Dubai, UAE', imageUrl: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop' },
-];
-
 // --- Reusable Component: PropertyCard ---
-const PropertyCard = ({ property, onClick }) => (
-  <div 
-    onClick={() => onClick(property)} 
-    role="button"
-    tabIndex="0" 
-    onKeyDown={(e) => { 
-      if (e.key === 'Enter' || e.key === ' ') { 
-        onClick(property); 
-      }
-    }}
-    className="text-left bg-white shadow-lg overflow-hidden transition duration-300 hover:shadow-xl rounded-lg flex-shrink-0 w-[240px] xs:w-[260px] sm:w-[280px] md:w-[320px] cursor-pointer"
-  >
-    <div className="relative">
-      <img src={property.imageUrl} alt={property.location} className="w-full h-40 xs:h-44 sm:h-48 md:h-56 object-cover" />
-      <button 
-        onClick={(e) => { 
-          e.stopPropagation(); 
-          console.log('Added to favorites:', property.id); 
-        }} 
-        className="absolute top-2 right-2 bg-white p-1.5 rounded-full shadow-md text-gray-700 hover:text-red-500 transition" 
-        aria-label="Add to Favorites"
-      >
-        <Heart size={14} className="xs:w-4 xs:h-4" fill="currentColor" />
-      </button>
+const PropertyCard = ({ property, onClick, showDelete = true }) => {
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    try {
+      await axiosClient.delete(`/saved-properties/${property.id}`);
+      console.log('Property removed from saved list:', property.id);
+      // You might want to trigger a re-fetch of saved properties here
+    } catch (error) {
+      console.error('Error removing property:', error);
+    }
+  };
+
+  return (
+    <div 
+      onClick={() => onClick(property)} 
+      role="button"
+      tabIndex="0" 
+      onKeyDown={(e) => { 
+        if (e.key === 'Enter' || e.key === ' ') { 
+          onClick(property); 
+        }
+      }}
+      className="text-left bg-white shadow-lg overflow-hidden transition duration-300 hover:shadow-xl rounded-lg flex-shrink-0 w-[240px] xs:w-[260px] sm:w-[280px] md:w-[320px] cursor-pointer"
+    >
+      <div className="relative">
+        <img src={property.image_url} alt={property.location} className="w-full h-40 xs:h-44 sm:h-48 md:h-56 object-cover" />
+        {showDelete && (
+          <button 
+            onClick={handleDelete}
+            className="absolute top-2 right-2 bg-white p-1.5 rounded-full shadow-md text-gray-700 hover:text-red-500 transition" 
+            aria-label="Remove from saved properties"
+          >
+            <Trash size={14} className="xs:w-4 xs:h-4" />
+          </button>
+        )}
+      </div>
+      <div className="p-2.5 xs:p-3 sm:p-4">
+        <p className="text-sm xs:text-base sm:text-lg font-light text-gray-900 mb-1 leading-snug">
+          ${property.price}
+        </p>
+        <p className="text-[10px] xs:text-xs sm:text-sm text-gray-600 truncate">{property.location}</p>
+        <Link 
+          to={property.type === 'rent' ? `/rent/${property.id}` : `/buy/${property.id}`} 
+          className={`${GOLD_BUTTON_CLASSES} mt-2 block text-center`} 
+          onClick={(e) => e.stopPropagation()}
+        >
+          View Property
+        </Link>
+      </div>
     </div>
-    <div className="p-2.5 xs:p-3 sm:p-4">
-      <p className="text-sm xs:text-base sm:text-lg font-light text-gray-900 mb-1 leading-snug">
-        ${property.price}
-      </p>
-      <p className="text-[10px] xs:text-xs sm:text-sm text-gray-600 truncate">{property.location}</p>
-    </div>
-  </div>
-);
+  );
+};
 
 // --- Component: Header ---
 const Header = () => {
@@ -160,7 +168,7 @@ const Header = () => {
 
         {/* Navigation Links (Desktop ONLY) */}
         <nav className="hidden lg:flex items-center space-x-2 xl:space-x-6 text-xs xl:text-sm font-medium tracking-wide">
-          {NAV_ITEMS.map((item) => (
+          {(token ? AUTH_NAV_ITEMS : NAV_ITEMS).map((item) => (
             <Link
               key={item.name}
               to={item.path}
@@ -199,7 +207,7 @@ const Header = () => {
           </button>
           <button 
             className="text-gray-700 p-0.5"
-            onClick={() => navigate('/contact')}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle Mobile Menu"
           >
             {isMobileMenuOpen ? <X size={18} className="xs:w-5 xs:h-5" /> : <Menu size={18} className="xs:w-5 xs:h-5" />}
@@ -214,7 +222,7 @@ const Header = () => {
         className={`lg:hidden transition-all duration-300 overflow-hidden ${isMobileMenuOpen ? 'max-h-96 opacity-100 py-2 xs:py-3' : 'max-h-0 opacity-0'}`}
       >
         <nav className="flex flex-col space-y-1 px-2 xs:px-3 sm:px-4 pb-2 xs:pb-3">
-          {NAV_ITEMS.map((item) => (
+          {(token ? AUTH_NAV_ITEMS : NAV_ITEMS).map((item) => (
             <Link
               key={item.name}
               to={item.path}
@@ -403,6 +411,8 @@ const MAGAZINE_SLIDES = [
 
 const MagazineAndTrendingSection = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
 
     // Navigation function for the carousel
     const navigateSlide = (direction) => {
@@ -477,7 +487,7 @@ const MagazineAndTrendingSection = () => {
                                                 {item.description}
                                             </p>
                                             <button 
-                                                onClick={() => console.log('Navigate to:', item.linkUrl)}
+                                                onClick={() => setShowModal(true)}
                                                 className={GOLD_BUTTON_CLASSES}
                                             >
                                                 {item.linkText} <ArrowRight size={12} className="xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4" />
@@ -509,21 +519,76 @@ const MagazineAndTrendingSection = () => {
                             <h4 className="text-xs xs:text-sm sm:text-base md:text-lg font-medium text-gray-900 mb-1 xs:mb-1.5 leading-snug">
                                 {topic.title}
                             </h4>
-                            <a href="#" className="text-[9px] xs:text-[10px] sm:text-xs font-semibold text-gray-700 hover:text-yellow-800 transition">
+                            <Link to = '/blog' className="text-[9px] xs:text-[10px] sm:text-xs font-semibold text-gray-700 hover:text-yellow-800 transition">
                                 Read More
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 ))}
             </div>
+
+            {/* Agent Connection Modal */}
+            {showModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50 p-3 xs:p-4">
+                    <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-4 xs:p-5 sm:p-6 md:p-8 max-w-[320px] xs:max-w-sm sm:max-w-md w-full relative animate-fadeIn border border-gray-100 mx-3">
+                        {/* Close Button */}
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className="absolute top-2 right-2 xs:top-2.5 xs:right-2.5 sm:top-3 sm:right-3 text-gray-500 hover:text-gray-800 transition"
+                        >
+                            <X size={16} className="xs:w-[18px] xs:h-[18px] sm:w-5 sm:h-5" />
+                        </button>
+
+                        {/* Modal Content */}
+                        <h3 className="text-base xs:text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 mb-2 xs:mb-2.5 sm:mb-3 text-center pr-6 xs:pr-7">
+                            Connect with an Agent
+                        </h3>
+
+                        <p className="text-[10px] xs:text-xs sm:text-sm text-gray-700 mb-3 xs:mb-3.5 sm:mb-4 text-center leading-relaxed">
+                            Would you like to connect with one of our expert agents to learn more about this exclusive content and discover luxury properties?
+                        </p>
+
+                        <div className="border-t border-gray-200 my-2 xs:my-2.5 sm:my-3"></div>
+
+                        {/* Buttons */}
+                        <div className="flex flex-col xs:flex-row justify-center gap-2 xs:gap-2.5 sm:gap-3 pt-1 xs:pt-1.5">
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="px-3 py-1.5 xs:px-4 xs:py-2 sm:px-5 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100 transition font-medium text-[10px] xs:text-xs sm:text-sm"
+                            >
+                                No, Thanks
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowModal(false);
+                                    navigate('/agents');
+                                }}
+                                className="px-3 py-1.5 xs:px-4 xs:py-2 sm:px-5 rounded-full bg-yellow-800 text-white font-semibold shadow-md hover:bg-yellow-900 transition-all duration-300 text-[10px] xs:text-xs sm:text-sm"
+                            >
+                                Yes, Connect Me
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
 
 // --- Component: GalleryModal (for View All) ---
-const GalleryModal = ({ properties, onClose, selectedPropertyId, setSelectedPropertyId }) => {
+const GalleryModal = ({ onClose, selectedPropertyId, setSelectedPropertyId, properties, loading }) => {
   const selectedProperty = useMemo(() => properties.find(p => p.id === selectedPropertyId), [properties, selectedPropertyId]);
+  
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-80 z-[100] flex items-center justify-center p-2 xs:p-3">
+        <div className="bg-white rounded-lg shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-y-auto relative mx-2 p-4">
+          <div className="text-center">Loading...</div>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-80 z-[100] flex items-center justify-center p-2 xs:p-3">
@@ -549,7 +614,7 @@ const GalleryModal = ({ properties, onClose, selectedPropertyId, setSelectedProp
             // Single Property View
             <div className="space-y-2.5 xs:space-y-3 sm:space-y-4">
               <img 
-                src={selectedProperty.imageUrl} 
+                src={selectedProperty.image_url} 
                 alt={selectedProperty.location} 
                 className="w-full h-auto max-h-[35vh] xs:max-h-[40vh] sm:max-h-[50vh] md:max-h-[60vh] object-cover rounded-lg shadow-lg"
               />
@@ -564,6 +629,14 @@ const GalleryModal = ({ properties, onClose, selectedPropertyId, setSelectedProp
               <p className="text-[10px] xs:text-xs sm:text-sm text-gray-700 leading-relaxed pt-2 xs:pt-3 border-t">
                 This exclusive property, located in the prestigious area of {selectedProperty.location.split(',')[0]}, represents the pinnacle of luxury living. With unparalleled views and world-class amenities, this residence offers privacy and elegance for the most discerning buyer. Contact us for a private viewing.
               </p>
+              <div className="pt-4 text-center">
+                <Link 
+                  to={selectedProperty.type === 'rent' ? `/rent/${selectedProperty.id}` : `/buy/${selectedProperty.id}`} 
+                  className={GOLD_BUTTON_CLASSES}
+                >
+                  View Full Details
+                </Link>
+              </div>
             </div>
           ) : (
             // Gallery View
@@ -576,12 +649,19 @@ const GalleryModal = ({ properties, onClose, selectedPropertyId, setSelectedProp
                   role="button"
                   tabIndex="0"
                 >
-                  <img src={property.imageUrl} alt={property.location} className="w-full h-36 xs:h-40 sm:h-44 md:h-48 object-cover" />
+                  <img src={property.image_url} alt={property.location} className="w-full h-36 xs:h-40 sm:h-44 md:h-48 object-cover" />
                   <div className="p-2 xs:p-2.5 sm:p-3">
                     <p className="text-xs xs:text-sm sm:text-base font-light text-gray-900 mb-0.5 xs:mb-1 leading-snug">
                       ${property.price}
                     </p>
                     <p className="text-[10px] xs:text-xs sm:text-sm text-gray-600 truncate">{property.location}</p>
+                    <Link 
+                      to={property.type === 'rent' ? `/rent/${property.id}` : `/buy/${property.id}`} 
+                      className={`${GOLD_BUTTON_CLASSES} mt-2 block text-center`} 
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      View Property
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -599,6 +679,22 @@ const FeaturedPropertiesSection = () => {
   const scrollRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState(null); 
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axiosClient.get('/featured-properties')
+      .then(({ data }) => {
+        setProperties(Array.isArray(data.data) ? data.data : []);
+        console.log('fetched featured properties:', data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching featured properties:', error);
+        setProperties([]);
+        setLoading(false);
+      });
+  }, []);
 
   const openModal = (property = null) => {
     setSelectedPropertyId(property ? property.id : null);
@@ -640,6 +736,14 @@ const FeaturedPropertiesSection = () => {
     return () => clearInterval(intervalId);
   }, []); 
 
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 md:px-8 py-6 xs:py-8 sm:py-10 md:py-12 lg:py-16">
+        <div className="text-center">Loading featured properties...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-3 xs:px-4 sm:px-6 md:px-8 py-6 xs:py-8 sm:py-10 md:py-12 lg:py-16">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-3 xs:mb-4 sm:mb-5 md:mb-6 gap-2 xs:gap-3">
@@ -677,9 +781,9 @@ const FeaturedPropertiesSection = () => {
         className="flex gap-2.5 xs:gap-3 sm:gap-4 overflow-x-scroll pb-3 hide-scrollbar snap-x snap-mandatory w-full"
         style={{ scrollBehavior: 'smooth' }}
       >
-        {MOCK_PROPERTIES.map((property) => (
+        {properties.map((property) => (
           <div key={property.id} className="snap-start">
-            <PropertyCard property={property} onClick={openModal} />
+            <PropertyCard property={property} onClick={openModal} showDelete={false} />
           </div>
         ))}
       </div>
@@ -696,10 +800,11 @@ const FeaturedPropertiesSection = () => {
       
       {isModalOpen && (
         <GalleryModal 
-          properties={MOCK_PROPERTIES} 
           onClose={closeModal} 
           selectedPropertyId={selectedPropertyId}
           setSelectedPropertyId={setSelectedPropertyId}
+          properties={properties}
+          loading={loading}
         />
       )}
     </div>

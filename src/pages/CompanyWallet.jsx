@@ -8,7 +8,7 @@ const wallets = [
   {
     name: "Bitcoin Wallet",
     icon: <Bitcoin className="text-yellow-600" size={30} />,
-    address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    address: "bc1qmxfq8lr6ftf9wwh789ua8jax55egnss5ksmnc0",
     network: "BTC Network",
   },
   {
@@ -20,8 +20,8 @@ const wallets = [
   {
     name: "Ethereum Wallet",
     icon: <Globe className="text-yellow-600" size={30} />,
-    address: "0x8b3d70A221f3c89Fb58aF0eaa5e2B8A7A72d8e67",
-    network: "ERC20 Network",
+    address: "0xE8b7E11696Afe0F2118e2FB186D71a04DafB3C3B",
+    network: "ETH Network",
   },
 ];
 
